@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,7 +16,7 @@ const LoginPage: React.FC = () => {
     }
 
     if (email === "admin@example.com" && password === "123") {
-      alert("Login successful!");
+      navigate("/dashboard");
     } else {
       setError("Invalid credentials. Please try again.");
     }
@@ -40,7 +42,6 @@ const LoginPage: React.FC = () => {
               className="w-full px-4 py-2 mt-1 border rounded-lg bg-white border-primary text-text-primary focus:outline-none focus:ring-1 focus:border-secondary"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              
             />
           </div>
           <div className="gap-2 flex flex-col mt-6 mb-8">
@@ -52,13 +53,14 @@ const LoginPage: React.FC = () => {
               className="w-full px-4 py-2 mt-1 border border-primary bg-white rounded-lg focus:outline-none focus:ring-1 focus:border-secondary text-text-primary"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              
             />
-            <p className="text-text-secondary text-sm self-end ">Forgot password?</p>
+            <p className="text-text-secondary text-sm self-end ">
+              Forgot password?
+            </p>
           </div>
           {error && (
-          <p className="text-error mb-4 mt-6 text-center text-sm">{error}</p>
-        )}
+            <p className="text-error mb-4 mt-6 text-center text-sm">{error}</p>
+          )}
           <button
             type="submit"
             className="w-full bg-secondary text-white py-2 rounded-lg hover:bg-primary hover:border-primary transition"
