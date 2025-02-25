@@ -21,8 +21,8 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white p-6 rounded-2xl shadow-lg font-sans">
+    <div className="flex-1 flex items-center justify-center">
+      <div className="w-full max-w-xl bg-white p-10 rounded-2xl shadow-lg font-sans">
         <h2 className="text-2xl font-bold text-center mb-2 text-primary">
           Welcome back,
         </h2>
