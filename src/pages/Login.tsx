@@ -25,36 +25,34 @@ const LoginPage: React.FC = () => {
   return (
     <div className="flex-1 flex items-center justify-center">
       <div className="w-full max-w-xl bg-white p-10 rounded-2xl shadow-lg font-sans">
-        <h2 className="text-2xl font-bold text-center mb-2 text-primary">
-          Welcome back,
-        </h2>
-        <p className="text-center text-gray-600">
+        <h1 className="text-center mb-2">Welcome back,</h1>
+        <p className="text-center text-textSecondary">
           login with your credentials to continue.
         </p>
 
         <form onSubmit={handleLogin} className="mt-10">
           <div className="gap-2 flex flex-col">
-            <label className="block text-sm font-semibold text-text-primary">
+            <label className="block text-sm font-semibold text-textPrimary">
               Email
             </label>
             <input
               type="email"
-              className="w-full px-4 py-2 mt-1 border rounded-lg bg-white border-primary text-text-primary focus:outline-none focus:ring-1 focus:border-secondary"
+              className="w-full px-4 py-2 mt-1 border rounded-lg bg-white border-primary text-textPrimary focus:outline-none focus:ring-1 focus:border-secondary"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="gap-2 flex flex-col mt-6 mb-8">
-            <label className="block text-sm font-semibold text-text-primary">
+            <label className="block text-sm font-semibold text-textPrimary">
               Password
             </label>
             <input
               type="password"
-              className="w-full px-4 py-2 mt-1 border border-primary bg-white rounded-lg focus:outline-none focus:ring-1 focus:border-secondary text-text-primary"
+              className="w-full px-4 py-2 mt-1 border border-primary bg-white rounded-lg focus:outline-none focus:ring-1 focus:border-secondary text-textPrimary"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <p className="text-text-secondary text-sm self-end ">
+            <p className="text-textSecondary text-sm self-end ">
               Forgot password?
             </p>
           </div>
@@ -63,7 +61,7 @@ const LoginPage: React.FC = () => {
           )}
           <button
             type="submit"
-            className="w-full bg-secondary text-white py-2 rounded-lg hover:bg-primary hover:border-primary transition"
+            className="w-full bg-secondary font-medium text-white py-2 rounded-lg hover:bg-primary hover:border-primary transition"
           >
             Login
           </button>
