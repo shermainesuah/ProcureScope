@@ -9,6 +9,7 @@ import {
   Filter,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Dropdown from "../components/Dropdown";
 
 const Files: React.FC = () => {
   const [recentImports] = useState([
@@ -132,6 +133,11 @@ const Files: React.FC = () => {
   // const [filterPanelOpen, setFilterPanelOpen] = useState(false);
   // const [selectedOwner, setSelectedOwner] = useState("");
 
+  const options = ["File Name", "Date Uploaded", "Total Records", "File Owner"];
+  const handleSelect = (option: string) => {
+    console.log("Selected:", option);
+  };
+
   return (
     <div className="main-container">
       <div className="flex justify-between items-center">
@@ -162,8 +168,9 @@ const Files: React.FC = () => {
                   <ArrowDownWideNarrow className="w-5 h-5 ml-1" />
                 </button>
                 {sortPanelOpen && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-md p-4">
+                  <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-md p-4">
                     <p className="text-sm font-medium">Sort by</p>
+                    <Dropdown options={options} onSelect={handleSelect} />
                   </div>
                 )}
               </div>
