@@ -40,7 +40,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
       {/* Option Selection Dropdown */}
       <button
         onClick={() => setIsOptionOpen(!isOptionOpen)}
-        className="group mt-4 rounded-lg border-primary border-2 text-sm flex items-center justify-between text-textColor-primary py-1 px-3 transition hover:border-secondary font-medium hover:text-secondary w-full"
+        className="group mt-4 rounded-lg border-primary border-2 text-sm flex items-center justify-between text-textColor-primary py-1 px-3 transition hover:border-secondary  hover:text-secondary w-full"
         style={{ width: dropdownWidth }}
       >
         {selectedOption || "Select"}
@@ -49,7 +49,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
 
       {isOptionOpen && (
         <div
-          className="absolute mt-1 bg-white border text-sm shadow-md p-1"
+          className="absolute mt-1 bg-white border text-sm shadow-md p-1 z-10"
           style={{ width: dropdownWidth }}
         >
           {options.map((option) => (
@@ -73,7 +73,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
         <div className="mt-2 relative">
           <button
             onClick={() => setIsOrderOpen(!isOrderOpen)}
-            className="w-full flex items-center justify-between rounded-lg border-primary border-2 text-sm py-1 px-3 transition hover:border-secondary font-medium hover:text-secondary"
+            className="w-full flex items-center justify-between rounded-lg border-primary border-2 text-sm py-1 px-3 transition hover:border-secondary hover:text-secondary"
             style={{ width: dropdownWidth }}
           >
             {selectedOrder}
