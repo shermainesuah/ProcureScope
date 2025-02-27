@@ -31,7 +31,7 @@ const DataImport: React.FC = () => {
     },
     {
       id: 2,
-      fileName: "procurement_feb.xlsx",
+      fileName: "procurement_feb.csv",
       date: "2025-02-20",
       owner: "Maria Gondalez",
       totalRecords: 2000,
@@ -52,7 +52,7 @@ const DataImport: React.FC = () => {
     },
     {
       id: 5,
-      fileName: "procurement_may.xlsx",
+      fileName: "procurement_may.csv",
       date: "2025-02-05",
       owner: "James Young",
       totalRecords: 1700,
@@ -181,7 +181,9 @@ const DataImport: React.FC = () => {
         >
           bye
         </button>
-        <h2 className="text-lg font-semibold mb-4">Upload Procurement Data</h2>
+        <h2 className="text-lg font-semibold mb-4 text-primary">
+          Upload Procurement Data
+        </h2>
         <div
           className="group border-2 border-dashed border-gray-300 rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:border-secondary"
           onClick={() => document.getElementById("fileInput")?.click()}
@@ -291,7 +293,9 @@ const DataImport: React.FC = () => {
           )}
         </div>
       )}
-      <h2 className="text-lg font-semibold mt-10">Recently Uploaded</h2>
+      <h2 className="text-lg font-semibold mt-10 text-primary">
+        Recently Uploaded
+      </h2>
       <div className="mt-4 max-w-4xl">
         <div className="border overflow-x-auto">
           <table className="w-full border-collapse">
@@ -324,7 +328,7 @@ const DataImport: React.FC = () => {
               <tr>
                 <td colSpan={4} className="p-3 text-center">
                   <button
-                    onClick={() => navigate("/procurement-history")}
+                    onClick={() => navigate("/files")}
                     className="text-textColor-primary hover:text-secondary text-sm font-medium"
                   >
                     View More
