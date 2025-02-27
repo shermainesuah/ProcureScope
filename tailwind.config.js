@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ["./index.html", "./src/**/*.{css,js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -14,7 +14,7 @@ export default {
         success: "#2BA84A", // Success Green
         warning: "#F4A261", // Warning Orange
         error: "#D62828", // Error Red
-        text: {
+        textColor: {
           primary: "#1C1C1C", // Primary Text
           secondary: "#5C677D", // Secondary Text
         },
