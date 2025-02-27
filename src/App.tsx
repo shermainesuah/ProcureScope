@@ -6,7 +6,7 @@ import { Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="min-h-screen w-screen bg-gray flex flex-col">
+    <div className="min-h-screen bg-gray flex flex-col">
       <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />

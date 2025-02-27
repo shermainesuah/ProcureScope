@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
-import { Upload, Download, File, X } from "lucide-react";
+import {
+  Upload,
+  Download,
+  File,
+  X,
+  ArrowRight,
+  CircleUserRound,
+} from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const DataImport: React.FC = () => {
   const [uploadingDataScenario, setUploadingDataScenario] = useState(false);
@@ -11,6 +19,45 @@ const DataImport: React.FC = () => {
     useState(false);
   const [showFailed, setShowFailed] = useState(false);
   const [failedUpload, setFailedUpload] = useState(false);
+  const navigate = useNavigate();
+
+  const [recentImports] = useState([
+    {
+      id: 1,
+      fileName: "procurement_jan.xlsx",
+      date: "2025-02-25",
+      owner: "Maria Gondalez",
+      totalRecords: 1500,
+    },
+    {
+      id: 2,
+      fileName: "procurement_feb.xlsx",
+      date: "2025-02-20",
+      owner: "Maria Gondalez",
+      totalRecords: 2000,
+    },
+    {
+      id: 3,
+      fileName: "procurement_mar.xlsx",
+      date: "2025-02-15",
+      owner: "Jones Brooke",
+      totalRecords: 1800,
+    },
+    {
+      id: 4,
+      fileName: "procurement_apr.xlsx",
+      date: "2025-02-10",
+      owner: "Maria Gondalez",
+      totalRecords: 2200,
+    },
+    {
+      id: 5,
+      fileName: "procurement_may.xlsx",
+      date: "2025-02-05",
+      owner: "James Young",
+      totalRecords: 1700,
+    },
+  ]);
 
   const simulateUpload = async () => {
     setProgress(0);
@@ -55,7 +102,7 @@ const DataImport: React.FC = () => {
   return (
     <div className="main-container">
       <div className="gap-1 flex flex-col mb-10">
-        <h1 className="">Procurement Data Import</h1>
+        <h1>Procurement Data Import</h1>
         <p className="text-textColor-secondary">
           Upload and manage your procurement data using a structured template to
           ensure consistency and accuracy.
@@ -86,7 +133,7 @@ const DataImport: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr className="text-textColor-primary">
               <td className="border p-2 border-l">PO-2024-00123</td>
               <td className="border p-2">2024-02-24</td>
               <td className="border p-2">ABC Agro Supplies</td>
@@ -244,6 +291,51 @@ const DataImport: React.FC = () => {
           )}
         </div>
       )}
+      <h2 className="text-lg font-semibold mt-10">Recently Uploaded</h2>
+      <div className="mt-4 max-w-4xl">
+        <div className="border overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray text-left text-sm text-textColor-primary">
+                <th className="p-3">File Name</th>
+                <th className="p-3">Date Uploaded</th>
+                <th className="p-3">Total Records</th>
+                <th className="p-3">File Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentImports.map((importItem) => (
+                <tr
+                  key={importItem.id}
+                  className="border-b text-textColor-primary text-sm"
+                >
+                  <td className="p-3">
+                    <File className="w-4 h-4 inline-block mr-2" />
+                    {importItem.fileName}
+                  </td>
+                  <td className="p-3">{importItem.date}</td>
+                  <td className="p-3">{importItem.totalRecords}</td>
+                  <td className="p-3">
+                    <CircleUserRound className="w-4 h-4 inline-block mr-2" />
+                    {importItem.owner}
+                  </td>
+                </tr>
+              ))}
+              <tr>
+                <td colSpan={4} className="p-3 text-center">
+                  <button
+                    onClick={() => navigate("/procurement-history")}
+                    className="text-textColor-primary hover:text-secondary text-sm font-medium"
+                  >
+                    View More
+                    <ArrowRight className="w-4 h-4 inline-block ml-1" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
