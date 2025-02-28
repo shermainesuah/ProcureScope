@@ -137,8 +137,7 @@ const Files: React.FC = () => {
 
   const sortDropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleSelect = (option: string) => {
-    console.log("Selected:", option);
+  const closeSortDropdown = () => {
     setSortPanelOpen(false);
   };
 
@@ -148,7 +147,7 @@ const Files: React.FC = () => {
         sortDropdownRef.current &&
         !sortDropdownRef.current.contains(event.target as Node)
       ) {
-        handleSelect("");
+        closeSortDropdown();
       }
     };
 
@@ -193,7 +192,7 @@ const Files: React.FC = () => {
                     className="absolute right-0 mt-2 bg-white border rounded-lg shadow-md p-4"
                   >
                     <p className="text-sm font-medium">Sort by</p>
-                    <Dropdown options={options} onSelect={handleSelect} />
+                    <Dropdown options={options} onSelect={closeSortDropdown} />
                   </div>
                 )}
               </div>

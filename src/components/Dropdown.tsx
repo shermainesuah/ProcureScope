@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 
 interface DropdownProps {
   options: string[];
-  onSelect: (option: string) => void;
+  onSelect: () => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
@@ -99,7 +99,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
             </div>
           )}
           <button
-            onClick={() => onSelect("")}
+            onClick={() => onSelect()}
             className="text-xs flex self-end border-secondary border-2 font-medium text-textColor-primary px-2 py-1 rounded-lg hover:bg-secondary hover:border-secondary hover:text-white transition mt-4"
           >
             Apply
