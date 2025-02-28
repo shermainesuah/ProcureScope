@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   File,
   CirclePlus,
@@ -134,10 +134,29 @@ const Files: React.FC = () => {
   // const [selectedOwner, setSelectedOwner] = useState("");
 
   const options = ["File Name", "Date Uploaded", "Total Records", "File Owner"];
+
+  const sortDropdownRef = useRef<HTMLDivElement>(null);
+
   const handleSelect = (option: string) => {
     console.log("Selected:", option);
     setSortPanelOpen(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sortDropdownRef.current &&
+        !sortDropdownRef.current.contains(event.target as Node)
+      ) {
+        handleSelect("");
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="main-container">
@@ -169,7 +188,10 @@ const Files: React.FC = () => {
                   <ArrowDownWideNarrow className="w-5 h-5 ml-1" />
                 </button>
                 {sortPanelOpen && (
-                  <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-md p-4">
+                  <div
+                    ref={sortDropdownRef}
+                    className="absolute right-0 mt-2 bg-white border rounded-lg shadow-md p-4"
+                  >
                     <p className="text-sm font-medium">Sort by</p>
                     <Dropdown options={options} onSelect={handleSelect} />
                   </div>
