@@ -3,19 +3,19 @@ import { ChevronDown } from "lucide-react";
 
 interface DropdownProps {
   options: string[];
-  onSelect: () => void;
+  onSelect: (option: string, order: string) => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [isOrderOpen, setIsOrderOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
-  const [selectedOrder, setSelectedOrder] = useState("Ascending");
+  const [selectedSortOption, setSelectedSortOption] = useState("");
+  const [selectedSortOrder, setSelectedSortOrder] = useState("Ascending");
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const textMeasureRef = useRef<HTMLDivElement>(null);
   const [dropdownWidth, setDropdownWidth] = useState("auto");
 
-  const textMeasureRef = useRef<HTMLDivElement>(null);
-
-  // Get the longest option between the options and "Descending"
   const longestOption = [...options, "Descending"].reduce(
     (a, b) => (a.length > b.length ? a : b),
     ""
@@ -27,8 +27,23 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
     }
   }, [options]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOptionOpen(false);
+        setIsOrderOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="w-fit">
+    <div ref={dropdownRef} className="relative w-fit">
       {/* Hidden element to measure longest option */}
       <div
         ref={textMeasureRef}
@@ -39,11 +54,11 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
 
       {/* Option Selection Dropdown */}
       <button
-        onClick={() => setIsOptionOpen(!isOptionOpen)}
-        className="group mt-4 rounded-lg border-primary border-2 text-sm flex items-center justify-between text-textColor-primary py-1 px-3 transition hover:border-secondary  hover:text-secondary w-full"
+        onClick={() => setIsOptionOpen((prev) => !prev)}
+        className="group mt-4 rounded-lg border-primary border-2 text-sm flex items-center justify-between text-textColor-primary py-1 px-3 transition hover:border-secondary hover:text-secondary w-full"
         style={{ width: dropdownWidth }}
       >
-        {selectedOption || "Select"}
+        {selectedSortOption ? selectedSortOption : "Select"}
         <ChevronDown className="w-4 h-4 ml-3" />
       </button>
 
@@ -56,8 +71,8 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
             <button
               key={option}
               onClick={() => {
+                setSelectedSortOption(option);
                 setIsOptionOpen(false);
-                setSelectedOption(option);
               }}
               className="block w-full text-left p-2 hover:bg-gray"
             >
@@ -67,15 +82,15 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
         </div>
       )}
 
-      {/* Sort Order Dropdown (only shown when an sort option is selected) */}
-      {selectedOption && (
+      {/* Sort Order Dropdown (only shown when an option is selected) */}
+      {selectedSortOption && (
         <div className="mt-2 flex flex-col">
           <button
-            onClick={() => setIsOrderOpen(!isOrderOpen)}
+            onClick={() => setIsOrderOpen((prev) => !prev)}
             className="w-full flex items-center justify-between rounded-lg border-primary border-2 text-sm py-1 px-3 transition hover:border-secondary hover:text-secondary relative"
             style={{ width: dropdownWidth }}
           >
-            {selectedOrder}
+            {selectedSortOrder}
             <ChevronDown className="w-4 h-4 ml-3" />
           </button>
 
@@ -88,7 +103,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
                 <button
                   key={order}
                   onClick={() => {
-                    setSelectedOrder(order);
+                    setSelectedSortOrder(order);
                     setIsOrderOpen(false);
                   }}
                   className="block w-full text-left p-2 hover:bg-gray"
@@ -98,8 +113,12 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
               ))}
             </div>
           )}
+
           <button
-            onClick={() => onSelect()}
+            onClick={() => {
+              onSelect(selectedSortOption, selectedSortOrder);
+              setSelectedSortOption("");
+            }}
             className="text-xs flex self-end border-secondary border-2 font-medium text-textColor-primary px-2 py-1 rounded-lg hover:bg-secondary hover:border-secondary hover:text-white transition mt-4"
           >
             Apply

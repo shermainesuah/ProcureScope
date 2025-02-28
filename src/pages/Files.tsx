@@ -5,8 +5,11 @@ import {
   CircleUserRound,
   Trash2,
   Download,
-  ArrowDownWideNarrow,
   Filter,
+  ArrowUpDown,
+  ArrowUpNarrowWide,
+  ArrowDownNarrowWide,
+  X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "../components/Dropdown";
@@ -136,9 +139,12 @@ const Files: React.FC = () => {
   const options = ["File Name", "Date Uploaded", "Total Records", "File Owner"];
 
   const sortDropdownRef = useRef<HTMLDivElement>(null);
+  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [selectedOrder, setSelectedOrder] = useState<string>("Ascending");
 
-  const closeSortDropdown = () => {
-    setSortPanelOpen(false);
+  const closeSortDropdown = (option: string, order: string) => {
+    setSelectedOption(option);
+    setSelectedOrder(order);
   };
 
   useEffect(() => {
@@ -147,7 +153,7 @@ const Files: React.FC = () => {
         sortDropdownRef.current &&
         !sortDropdownRef.current.contains(event.target as Node)
       ) {
-        closeSortDropdown();
+        setSortPanelOpen(false);
       }
     };
 
@@ -184,7 +190,7 @@ const Files: React.FC = () => {
                   onClick={() => setSortPanelOpen(true)}
                   className="group w-fit text-sm flex items-center text-textColor-primary p-2 hover:text-secondary transition"
                 >
-                  <ArrowDownWideNarrow className="w-5 h-5 ml-1" />
+                  <ArrowUpDown className="w-5 h-5 ml-1" />
                 </button>
                 {sortPanelOpen && (
                   <div
@@ -192,6 +198,23 @@ const Files: React.FC = () => {
                     className="absolute right-0 mt-2 bg-white border rounded-lg shadow-md p-4"
                   >
                     <p className="text-sm font-medium">Sort by</p>
+                    {selectedOption && selectedOrder && (
+                      <div className="flex gap-1 items-center rounded-2xl border-2 px-2 py-1 bg-secondary text-white border-secondary mt-4 w-fit text-sm font-medium ">
+                        {selectedOption}
+                        {selectedOrder === "Ascending" ? (
+                          <ArrowUpNarrowWide className="h-4 w-4" />
+                        ) : (
+                          <ArrowDownNarrowWide className="h-4 w-4" />
+                        )}
+                        <X
+                          onClick={() => {
+                            setSelectedOption("");
+                            setSelectedOrder("");
+                          }}
+                          className="h-4 w-4 ml-2 hover:text-red-500 hover:cursor-pointer"
+                        />
+                      </div>
+                    )}
                     <Dropdown options={options} onSelect={closeSortDropdown} />
                   </div>
                 )}
