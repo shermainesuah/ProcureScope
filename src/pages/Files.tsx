@@ -136,6 +136,7 @@ const Files: React.FC = () => {
   const options = ["File Name", "Date Uploaded", "Total Records", "File Owner"];
   const handleSelect = (option: string) => {
     console.log("Selected:", option);
+    setSortPanelOpen(false);
   };
 
   return (

@@ -23,12 +23,12 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
 
   useEffect(() => {
     if (textMeasureRef.current) {
-      setDropdownWidth(`${textMeasureRef.current.offsetWidth + 32}px`); // +32 for padding
+      setDropdownWidth(`${textMeasureRef.current.offsetWidth + 32}px`);
     }
   }, [options]);
 
   return (
-    <div className="relative w-fit">
+    <div className="w-fit">
       {/* Hidden element to measure longest option */}
       <div
         ref={textMeasureRef}
@@ -56,7 +56,6 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
             <button
               key={option}
               onClick={() => {
-                onSelect(option);
                 setIsOptionOpen(false);
                 setSelectedOption(option);
               }}
@@ -68,12 +67,12 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
         </div>
       )}
 
-      {/* Sort Order Dropdown (only shown when an option is selected) */}
+      {/* Sort Order Dropdown (only shown when an sort option is selected) */}
       {selectedOption && (
-        <div className="mt-2 relative">
+        <div className="mt-2 flex flex-col">
           <button
             onClick={() => setIsOrderOpen(!isOrderOpen)}
-            className="w-full flex items-center justify-between rounded-lg border-primary border-2 text-sm py-1 px-3 transition hover:border-secondary hover:text-secondary"
+            className="w-full flex items-center justify-between rounded-lg border-primary border-2 text-sm py-1 px-3 transition hover:border-secondary hover:text-secondary relative"
             style={{ width: dropdownWidth }}
           >
             {selectedOrder}
@@ -82,7 +81,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
 
           {isOrderOpen && (
             <div
-              className="absolute mt-1 bg-white border text-sm shadow-md p-1"
+              className="absolute mt-9 bg-white border text-sm shadow-md p-1"
               style={{ width: dropdownWidth }}
             >
               {["Ascending", "Descending"].map((order) => (
@@ -99,6 +98,12 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
               ))}
             </div>
           )}
+          <button
+            onClick={() => onSelect("")}
+            className="text-xs flex self-end border-secondary border-2 font-medium text-textColor-primary px-2 py-1 rounded-lg hover:bg-secondary hover:border-secondary hover:text-white transition mt-4"
+          >
+            Apply
+          </button>
         </div>
       )}
     </div>
