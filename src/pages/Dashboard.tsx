@@ -1,8 +1,10 @@
+import AnomaliesAlert from "../components/AnomaliesAlert";
+
 const Dashboard: React.FC = () => {
   return (
-    <div>
+    <div className="main-container">
       <h1>Dashboard</h1>
-      <p>Welcome to the dashboard!</p>
+      <AnomaliesAlert />
     </div>
   );
 };
