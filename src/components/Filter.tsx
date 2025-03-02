@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Dropdown from "./Dropdown";
+import React from "react";
 
 export interface FilterOption {
   label: string;
@@ -20,6 +21,7 @@ const filterConfig: Record<
     conditions: string[];
     inputType: string;
     placeholder?: string;
+    options?: string[];
   }
 > = {
   name: {
@@ -37,7 +39,7 @@ const filterConfig: Record<
   },
   date: {
     label: "Date",
-    conditions: ["before", "after", "on", "not on", "in between"], // Added "in between"
+    conditions: ["before", "after", "on", "not on", "in between"],
     inputType: "date",
   },
   records: {
@@ -52,6 +54,30 @@ const filterConfig: Record<
     inputType: "text",
     placeholder: "Owner name",
   },
+  severity: {
+    label: "Severity Level",
+    conditions: ["is"],
+    inputType: "select",
+    options: ["Low", "Medium", "High", "Critical"],
+  },
+  anomalyType: {
+    label: "Anomaly Type",
+    conditions: ["is"],
+    inputType: "select",
+    placeholder: "Select anomaly type",
+  },
+  reviewStatus: {
+    label: "Review Status",
+    conditions: ["is"],
+    inputType: "select",
+    placeholder: "Select review status",
+  },
+  supplier: {
+    label: "Supplier",
+    conditions: ["is", "is not", "contains", "does not contain"],
+    inputType: "text",
+    placeholder: "Supplier name",
+  },
 };
 
 const FilterDropdown: React.FC<FilterProps> = ({ types, onSelect }) => {
@@ -63,74 +89,96 @@ const FilterDropdown: React.FC<FilterProps> = ({ types, onSelect }) => {
 
   return (
     <div className="p-4 text-sm flex flex-col">
-      {types.map((type, index) => {
-        const { label, conditions, inputType, placeholder } =
-          filterConfig[type];
-        const selectedCondition = selectedConditions[type];
+      <div className="grid grid-cols-[repeat(3,minmax(min-content,1fr))] gap-4 text-sm items-center">
+        {types.map((type, index) => {
+          const { label, conditions, inputType, placeholder, options } =
+            filterConfig[type];
+          const selectedCondition = selectedConditions[type] || conditions[0];
 
-        return (
-          <div
-            key={index}
-            className="flex items-center justify-between gap-6 mb-2"
-          >
-            <label className="font-medium capitalize w-1/4">{label}</label>
+          return (
+            <React.Fragment key={index}>
+              {/* Column 1: Label */}
+              <label className="font-medium capitalize whitespace-nowrap">
+                {label}
+              </label>
 
-            {/* Condition Selection */}
-            <Dropdown
-              selectedDropdownOption={selectedConditions[type]} // Ensure it resets
-              options={conditions}
-              onSelect={(condition) =>
-                setSelectedConditions((prev) => ({
-                  ...prev,
-                  [type]: condition,
-                }))
-              }
-              dropdownWidth="150px"
-            />
-
-            {/* Input Field(s) */}
-            {selectedCondition === "in between" ? (
-              <div className="flex items-center flex-col gap-2">
-                <input
-                  type="date"
-                  className="border p-2 rounded w-40"
-                  value={inputValues[`${type}-start`] || ""}
-                  onChange={(e) =>
-                    setInputValues((prev) => ({
+              {/* Column 2: Condition Dropdown */}
+              {conditions.length === 1 ? (
+                <span className="text-sm font-medium text-center">
+                  {conditions[0]}
+                </span>
+              ) : (
+                <Dropdown
+                  selectedDropdownOption={selectedConditions[type]}
+                  options={conditions}
+                  onSelect={(condition) =>
+                    setSelectedConditions((prev) => ({
                       ...prev,
-                      [`${type}-start`]: e.target.value,
+                      [type]: condition,
                     }))
                   }
+                  dropdownWidth="160px"
                 />
-                <input
-                  type="date"
-                  className="border p-2 rounded w-40"
-                  value={inputValues[`${type}-end`] || ""}
-                  onChange={(e) =>
-                    setInputValues((prev) => ({
-                      ...prev,
-                      [`${type}-end`]: e.target.value,
-                    }))
-                  }
-                />
+              )}
+
+              {/* Column 3: Input Field */}
+              <div className="w-full">
+                {inputType === "select" && options ? (
+                  <Dropdown
+                    selectedDropdownOption={inputValues[type] || ""}
+                    options={options}
+                    onSelect={(value) =>
+                      setInputValues((prev) => ({
+                        ...prev,
+                        [type]: value,
+                      }))
+                    }
+                    dropdownWidth="160px"
+                  />
+                ) : selectedCondition === "in between" ? (
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="date"
+                      className="border p-2 rounded"
+                      value={inputValues[`${type}-start`] || ""}
+                      onChange={(e) =>
+                        setInputValues((prev) => ({
+                          ...prev,
+                          [`${type}-start`]: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="date"
+                      className="border p-2 rounded"
+                      value={inputValues[`${type}-end`] || ""}
+                      onChange={(e) =>
+                        setInputValues((prev) => ({
+                          ...prev,
+                          [`${type}-end`]: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                ) : (
+                  <input
+                    type={inputType}
+                    className="border p-2 rounded w-full"
+                    placeholder={placeholder}
+                    value={inputValues[type] || ""}
+                    onChange={(e) =>
+                      setInputValues((prev) => ({
+                        ...prev,
+                        [type]: e.target.value,
+                      }))
+                    }
+                  />
+                )}
               </div>
-            ) : (
-              <input
-                type={inputType}
-                className="border p-2 rounded min-w-40"
-                placeholder={placeholder}
-                value={inputValues[type] || ""}
-                onChange={(e) =>
-                  setInputValues((prev) => ({
-                    ...prev,
-                    [type]: e.target.value,
-                  }))
-                }
-              />
-            )}
-          </div>
-        );
-      })}
+            </React.Fragment>
+          );
+        })}
+      </div>
 
       <button
         onClick={() => {
@@ -159,7 +207,7 @@ const FilterDropdown: React.FC<FilterProps> = ({ types, onSelect }) => {
           setSelectedConditions({});
           setInputValues({});
         }}
-        className="text-sm flex self-end border-secondary border-2 font-medium text-textColor-primary px-2 py-1 rounded-lg hover:bg-secondary hover:border-secondary hover:text-white transition mt-4"
+        className="text-sm self-end border-secondary border-2 font-medium text-textColor-primary px-2 py-1 rounded-lg hover:bg-secondary hover:border-secondary hover:text-white transition mt-4"
       >
         Apply
       </button>
