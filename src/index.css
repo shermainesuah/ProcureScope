@@ -14,10 +14,22 @@
   h1 {
     @apply text-2xl font-bold text-primary;
   }
+  h2 {
+    @apply text-lg font-semibold text-primary;
+  }
 }
 
 @layer components {
   .main-container {
     @apply flex-1 bg-white mx-8 mb-8 p-8 rounded-lg;
+  }
+}
+
+.world-map .map-unselected {
+  fill: #fff;
+
+  &:hover {
+    cursor: pointer;
+    filter: drop-shadow(0 0 7px rgba(0, 0, 0, 0.3));
   }
 }
