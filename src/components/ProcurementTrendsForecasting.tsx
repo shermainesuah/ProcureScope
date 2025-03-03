@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from "@radix-ui/react-accordion";
 import TrendsOverTime from "./forecasting/TrendsOverTime";
+import YoyComparison from "./forecasting/YoyComparison";
 
 const ProcurementTrendsForecasting: React.FC = () => {
   const trendsForecastingPanels = [
@@ -12,7 +13,7 @@ const ProcurementTrendsForecasting: React.FC = () => {
       title: "Procurement Trends Over Time",
     },
     {
-      title: "Year-over-year comparison (Y-o-Y)",
+      title: "Year-over-Year Comparison (Y-o-Y)",
     },
     {
       title: "Forecasting & Predictive Insights",
@@ -32,7 +33,13 @@ const ProcurementTrendsForecasting: React.FC = () => {
               {panel.title}
             </AccordionTrigger>
             <AccordionContent>
-              {index === 0 ? <TrendsOverTime /> : panel.title}
+              {index === 0 ? (
+                <TrendsOverTime />
+              ) : index === 1 ? (
+                <YoyComparison />
+              ) : (
+                panel.title
+              )}
             </AccordionContent>
           </AccordionItem>
         ))}
