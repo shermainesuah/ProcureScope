@@ -1,5 +1,6 @@
 import AnomaliesAlert from "../components/AnomaliesAlert";
 import GlobalProcurement from "../components/GlobalProcurement";
+import ProcurementTrendsForecasting from "../components/ProcurementTrendsForecasting";
 
 const Dashboard: React.FC = () => {
   return (
@@ -10,6 +11,9 @@ const Dashboard: React.FC = () => {
       </div>
       <div className="p-6 border rounded-lg max-w-6xl">
         <GlobalProcurement />
+      </div>
+      <div className="p-6 border rounded-lg max-w-6xl">
+        <ProcurementTrendsForecasting />
       </div>
     </div>
   );
