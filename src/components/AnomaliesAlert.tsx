@@ -14,6 +14,7 @@ import {
   ArrowUpDown,
   X,
   Filter,
+  EllipsisVertical,
 } from "lucide-react";
 import ReactECharts from "echarts-for-react";
 import SortDropdown from "./SortDropdown";
@@ -133,20 +134,18 @@ const AnomaliesAlert: React.FC = () => {
 
   return (
     <div className="max-w-6xl">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold mt-4 text-primary">
-          Anomalies Alert
-        </h2>
+      <div className="flex items-end justify-between mb-3">
+        <h2>Anomalies Alert</h2>
         <div>
-          <div className="flex gap-2 relative">
+          <div className="flex gap-4 relative">
             <div className="relative" ref={sortDropdownRef}>
               <button
                 onClick={() => setSortPanelOpen(!sortPanelOpen)}
-                className={`group w-fit text-sm flex items-center p-2 hover:text-secondary transition ${
+                className={`group w-fit text-sm flex items-center hover:text-secondary transition ${
                   sortPanelOpen ? "text-secondary" : "text-textColor-primary"
                 }`}
               >
-                <ArrowUpDown className="w-5 h-5 ml-1" />
+                <ArrowUpDown className="w-4 h-4" />
               </button>
               {sortPanelOpen && (
                 <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-md p-4">
@@ -177,14 +176,14 @@ const AnomaliesAlert: React.FC = () => {
             </div>
             <div className="relative" ref={filterDropdownRef}>
               <button
-                className={`group w-fit text-sm flex items-center  p-2 hover:text-secondary transition ${
+                className={`group w-fit text-sm flex items-center hover:text-secondary transition ${
                   filterDropdownOpen
                     ? "text-secondary"
                     : "text-textColor-primary"
                 }`}
               >
                 <Filter
-                  className="w-5 h-5 ml-1"
+                  className="w-4 h-4"
                   onClick={() => {
                     setFilterDropdownOpen(!filterDropdownOpen);
                     setSortPanelOpen(false);
@@ -230,6 +229,7 @@ const AnomaliesAlert: React.FC = () => {
                 </div>
               )}
             </div>
+            <EllipsisVertical className="w-4 h-4 text-textColor-primary hover:text-secondary hover:cursor-pointer" />
           </div>
         </div>
       </div>
