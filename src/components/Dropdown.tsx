@@ -9,6 +9,7 @@ import {
   SelectValue,
   SelectViewport,
 } from "@radix-ui/react-select";
+import type { Option } from "../types";
 
 interface DropdownProps {
   options: Option[];
@@ -19,11 +20,6 @@ interface DropdownProps {
   onMouseDown?: (e: React.MouseEvent) => void;
 }
 
-export interface Option {
-  label: string;
-  value: string;
-}
-
 const Dropdown: React.FC<DropdownProps> = ({
   options,
   onSelect,
@@ -31,17 +27,17 @@ const Dropdown: React.FC<DropdownProps> = ({
   placeholder = "Select",
   dropdownWidth,
 }) => {
+  const handleValueChange = (value: string) => {
+    const selectedOption = options.find((opt) => opt.value === value);
+    if (selectedOption) {
+      onSelect(selectedOption);
+    }
+  };
+
   return (
-    <Select
-      value={value}
-      onValueChange={(val) => {
-        const selectedOption = options.find((opt) => opt.value === val);
-        if (selectedOption) {
-          onSelect(selectedOption);
-        }
-      }}
-    >
+    <Select value={value} onValueChange={handleValueChange}>
       <SelectTrigger
+        aria-label="Select an option"
         className="group rounded-lg border-primary border-2 text-sm flex items-center justify-between text-textColor-primary py-1 px-3 transition hover:border-secondary hover:text-secondary w-full"
         style={{ width: dropdownWidth }}
       >

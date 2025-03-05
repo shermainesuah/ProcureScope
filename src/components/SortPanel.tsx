@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import Dropdown, { Option } from "./Dropdown";
+import Dropdown from "./Dropdown";
 import {
   ArrowDownNarrowWide,
   ArrowUpDown,
   ArrowUpNarrowWide,
   X,
 } from "lucide-react";
+import type { Option } from "../types";
 
 interface SortDropdownProps {
   options: Option[];
