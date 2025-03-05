@@ -11,4 +11,11 @@ export interface Option {
   value: string;
 }
 
+export interface FilterOption {
+  label: string;
+  type: string;
+  condition: Option;
+  value: string | { start: string; end: string };
+}
+
 export type FileDataList = FileData[];

@@ -1,30 +1,42 @@
 import { useEffect, useRef, useState } from "react";
-import Dropdown, { Option } from "./Dropdown";
+import Dropdown from "./Dropdown";
 import React from "react";
 import { Filter, X } from "lucide-react";
+import type { FilterOption, Option } from "../types";
 
-export interface FilterOption {
-  label: string;
-  type: string;
-  condition: Option;
-  value: string | { start: string; end: string };
-}
+type FilterKey =
+  | "name"
+  | "date"
+  | "records"
+  | "owner"
+  | "severity"
+  | "anomalyType"
+  | "reviewStatus"
+  | "supplier"
+  | "product"
+  | "requiredSupply"
+  | "availableSupply"
+  | "supplyShortage"
+  | "riskLevel";
 
 interface FilterProps {
-  types: (keyof typeof filterConfig)[];
+  types: FilterKey[];
   onSelect: (filters: FilterOption[]) => void;
 }
 
-const filterConfig: Record<
-  string,
-  {
+type FilterConfig = {
+  [key in FilterKey]: {
     label: string;
     conditions: Option[];
     inputType: string;
     placeholder?: string;
     options?: Option[];
-  }
-> = {
+  };
+};
+
+type FilterBody = FilterConfig[FilterKey];
+
+const filterConfig: FilterConfig = {
   name: {
     label: "File Name",
     conditions: [
@@ -168,27 +180,116 @@ const filterConfig: Record<
   },
 };
 
-const FilterPanel: React.FC<FilterProps> = ({ types, onSelect }) => {
-  const [selectedConditions, setSelectedConditions] = useState<{
-    [key: string]: Option;
-  }>({});
+const FilterPanel = ({ types, onSelect }: FilterProps) => {
+  const [selectedFilters, setselectedFilters] = useState<
+    Partial<Record<FilterKey, Option>>
+  >({});
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
   const panelRef = useRef<HTMLDivElement>(null);
   const [appliedFilters, setAppliedFilters] = useState<FilterOption[]>([]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        panelRef.current &&
-        !panelRef.current.contains(event.target as Node)
-      ) {
-        setSelectedConditions({});
-        setInputValues({});
-        setFilterDropdownOpen(false);
-      }
-    };
+  const renderInputField = (config: FilterBody, type: string) => {
+    if (config.inputType === "select" && config.options) {
+      return (
+        <Dropdown
+          value={inputValues[type]}
+          options={config.options}
+          onSelect={(selected) =>
+            setInputValues((prev) => ({
+              ...prev,
+              [type]: selected.value,
+            }))
+          }
+          dropdownWidth="160px"
+        />
+      );
+    }
 
+    if (selectedFilters[type as FilterKey]?.value === "in between") {
+      return (
+        <div className="grid gap-2">
+          <input
+            type="date"
+            className="border p-2 rounded-lg"
+            value={inputValues[`${type}-start`] || ""}
+            onChange={(e) =>
+              setInputValues((prev) => ({
+                ...prev,
+                [`${type}-start`]: e.target.value,
+              }))
+            }
+          />
+          <input
+            type="date"
+            className="border p-2 rounded-lg"
+            value={inputValues[`${type}-end`] || ""}
+            onChange={(e) =>
+              setInputValues((prev) => ({
+                ...prev,
+                [`${type}-end`]: e.target.value,
+              }))
+            }
+          />
+        </div>
+      );
+    }
+
+    return (
+      <input
+        type={config.inputType}
+        className="border p-2 rounded-lg w-full"
+        placeholder={config.placeholder}
+        value={inputValues[type] || ""}
+        onChange={(e) =>
+          setInputValues((prev) => ({
+            ...prev,
+            [type]: e.target.value,
+          }))
+        }
+      />
+    );
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+      setselectedFilters({});
+      setInputValues({});
+      setFilterDropdownOpen(false);
+    }
+  };
+
+  const handleApplyFilter = () => {
+    const filters = Object.keys(selectedFilters).map((type) => {
+      const filterKey = type as FilterKey;
+      const filterConfigItem = filterConfig[type as keyof typeof filterConfig];
+
+      if (selectedFilters[filterKey]?.value === "in between") {
+        return {
+          label: filterConfigItem.label,
+          type,
+          condition: selectedFilters[filterKey] as Option,
+          value: {
+            start: inputValues[`${type}-start`] || "",
+            end: inputValues[`${type}-end`] || "",
+          },
+        };
+      }
+
+      return {
+        label: filterConfigItem.label,
+        type,
+        condition: selectedFilters[filterKey] as Option,
+        value: inputValues[type] || "",
+      };
+    });
+    setAppliedFilters(filters.map((prev) => ({ ...prev, filters })));
+    setselectedFilters({});
+    setInputValues({});
+    onSelect(filters);
+  };
+
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -242,28 +343,29 @@ const FilterPanel: React.FC<FilterProps> = ({ types, onSelect }) => {
             <div className="text-sm flex flex-col">
               <div className="grid grid-cols-[repeat(3,minmax(min-content,1fr))] gap-4 text-sm items-center">
                 {types.map((type, index) => {
-                  const { label, conditions, inputType, placeholder, options } =
-                    filterConfig[type];
+                  const { label, conditions } = filterConfig[type];
 
                   return (
                     <React.Fragment key={index}>
-                      {/* Column 1: Label */}
-                      <label className="font-medium capitalize whitespace-nowrap">
+                      {/* Label */}
+                      <label className="font-semibold whitespace-nowrap">
                         {label}
                       </label>
 
-                      {/* Column 2: Condition Dropdown */}
+                      {/* Condition Dropdown */}
                       {conditions.length === 1 ? (
-                        <span className="text-sm font-medium text-center">
+                        <span className="text-sm text-center">
                           {conditions[0].label}
                         </span>
                       ) : (
                         <div>
                           <Dropdown
-                            value={selectedConditions[type]?.value ?? ""}
+                            value={
+                              selectedFilters[type as FilterKey]?.value ?? ""
+                            }
                             options={conditions}
                             onSelect={(condition) =>
-                              setSelectedConditions((prev) => ({
+                              setselectedFilters((prev) => ({
                                 ...prev,
                                 [type]: condition,
                               }))
@@ -273,59 +375,9 @@ const FilterPanel: React.FC<FilterProps> = ({ types, onSelect }) => {
                         </div>
                       )}
 
-                      {/* Column 3: Input Field */}
+                      {/* Input Field */}
                       <div className="w-full">
-                        {inputType === "select" && options ? (
-                          <Dropdown
-                            value={inputValues[type] || ""}
-                            options={options}
-                            onSelect={(value) =>
-                              setInputValues((prev) => ({
-                                ...prev,
-                                [type]: value.value,
-                              }))
-                            }
-                            dropdownWidth="160px"
-                          />
-                        ) : selectedConditions[type]?.value === "in between" ? (
-                          <div className="grid gap-2">
-                            <input
-                              type="date"
-                              className="border p-2 rounded"
-                              value={inputValues[`${type}-start`] || ""}
-                              onChange={(e) =>
-                                setInputValues((prev) => ({
-                                  ...prev,
-                                  [`${type}-start`]: e.target.value,
-                                }))
-                              }
-                            />
-                            <input
-                              type="date"
-                              className="border p-2 rounded"
-                              value={inputValues[`${type}-end`] || ""}
-                              onChange={(e) =>
-                                setInputValues((prev) => ({
-                                  ...prev,
-                                  [`${type}-end`]: e.target.value,
-                                }))
-                              }
-                            />
-                          </div>
-                        ) : (
-                          <input
-                            type={inputType}
-                            className="border p-2 rounded w-full"
-                            placeholder={placeholder}
-                            value={inputValues[type] || ""}
-                            onChange={(e) =>
-                              setInputValues((prev) => ({
-                                ...prev,
-                                [type]: e.target.value,
-                              }))
-                            }
-                          />
-                        )}
+                        {renderInputField(filterConfig[type], type)}
                       </div>
                     </React.Fragment>
                   );
@@ -334,34 +386,7 @@ const FilterPanel: React.FC<FilterProps> = ({ types, onSelect }) => {
 
               <button
                 onClick={() => {
-                  const filters = Object.keys(selectedConditions).map(
-                    (type) => {
-                      if (selectedConditions[type].value === "in between") {
-                        return {
-                          label: filterConfig[type].label,
-                          type,
-                          condition: selectedConditions[type],
-                          value: {
-                            start: inputValues[`${type}-start`] || "",
-                            end: inputValues[`${type}-end`] || "",
-                          },
-                        };
-                      }
-
-                      return {
-                        label: filterConfig[type].label,
-                        type,
-                        condition: selectedConditions[type],
-                        value: inputValues[type] || "",
-                      };
-                    }
-                  );
-                  setAppliedFilters(
-                    filters.map((prev) => ({ ...prev, filters }))
-                  );
-                  setSelectedConditions({});
-                  setInputValues({});
-                  onSelect(filters);
+                  handleApplyFilter();
                 }}
                 className="text-sm self-end border-secondary border-2 font-medium text-textColor-primary px-2 py-1 rounded-lg hover:bg-secondary hover:border-secondary hover:text-white transition mt-6"
               >
