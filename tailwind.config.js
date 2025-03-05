@@ -6,6 +6,7 @@ export default {
       colors: {
         primary: "#0A2540", // Teal Blue (Primary)
         secondary: "#0077B6", // Dark Navy (Secondary)
+        tertiary: "#5C677D",
         gray: {
           DEFAULT: "#f4f6fc", // Cool Gray (Background)
           text: "#5C677D", // Secondary Text
