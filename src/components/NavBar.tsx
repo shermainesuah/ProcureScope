@@ -11,23 +11,23 @@ const Navbar = () => {
       <Link to="/dashboard">
         <div className="flex items-center gap-2 hover:cursor-pointer">
           <img src={logo} alt="ProcureScope Logo" className="h-8 w-8" />
-          <span className="text-xl font-bold font-mono">ProcureScope</span>
+          <span className="text-xl font-bold">ProcureScope</span>
         </div>
       </Link>
       {currentLocation.pathname !== "/login" && (
         <div className="flex gap-7">
           <Link to="/data-import">
-            <FileSpreadsheet className="h-5 w-5 text-textColor-primary hover:text-secondary hover:cursor-pointer" />
+            <FileSpreadsheet className="h-5 w-5 text-primary hover:text-secondary hover:cursor-pointer" />
           </Link>
           <Link to="">
-            <CircleUser className="h-5 w-5 text-textColor-primary hover:text-secondary hover:cursor-pointer" />
+            <CircleUser className="h-5 w-5 text-primary hover:text-secondary hover:cursor-pointer" />
           </Link>
           <Link to="/login">
             <LogOut
               onClick={() => {
                 navigate("/login");
               }}
-              className="h-5 text-textColor-primary hover:text-secondary w-5 hover:cursor-pointer"
+              className="h-5 text-primary hover:text-secondary w-5 hover:cursor-pointer"
             />
           </Link>
         </div>
