@@ -1,43 +1,62 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import Dropdown from "./Dropdown";
-import {
-  ArrowDownNarrowWide,
-  ArrowUpDown,
-  ArrowUpNarrowWide,
-  X,
-} from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import type { Option } from "../types";
+import SortBadge from "./SortBadge";
 
 interface SortDropdownProps {
   options: Option[];
-  onSelect: (option: string, order: string) => void;
+  onSelect: (selectedOptions: { option: Option; order: Option }[]) => void;
 }
+
+type SortOptionState = {
+  selected: { option: Option; order: Option };
+  applied: { option: Option; order: Option }[];
+};
+
+const initialSortState: SortOptionState = {
+  selected: {
+    option: { label: "", value: "" },
+    order: { label: "", value: "" },
+  },
+  applied: [],
+};
 
 const orderOptions: Option[] = [
   { label: "Ascending", value: "ascending" },
   { label: "Descending", value: "descending" },
 ];
 
-const SortPanel: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
-  const [sortOptions, setSortOptions] = useState<{
-    selected: { option: Option; order: Option };
-    applied: { option: Option; order: Option }[];
-  }>({
-    selected: {
-      option: { label: "", value: "" },
-      order: { label: "", value: "" },
-    },
-    applied: [],
-  });
+const SortPanel = ({ options, onSelect }: SortDropdownProps) => {
+  const [sortOptions, setSortOptions] = useState(initialSortState);
   const [sortPanelOpen, setSortPanelOpen] = useState(false);
-
   const [dropdownWidth, setDropdownWidth] = useState("auto");
   const textMeasureRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const longestOption = [
-    ...options.map((o) => o.value || ""),
-    "descending",
-  ].reduce((a, b) => (a.length > b.length ? a : b), "");
+  const longestOption = useMemo(
+    () =>
+      [...options.map((option) => option.value), "descending"].reduce((a, b) =>
+        a.length > b.length ? a : b
+      ),
+    [options]
+  );
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setSortOptions((prev) => ({
+        selected: {
+          option: { label: "", value: "" },
+          order: { label: "", value: "" },
+        },
+        applied: prev.applied.length > 0 ? prev.applied : [],
+      }));
+      setSortPanelOpen(false);
+    }
+  };
 
   useEffect(() => {
     if (textMeasureRef.current) {
@@ -45,31 +64,27 @@ const SortPanel: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
     }
   }, [options]);
 
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setSortOptions({
-          selected: {
-            option: { label: "", value: "" },
-            order: { label: "", value: "" },
-          },
-          applied: [],
-        });
-        setSortPanelOpen(false);
-      }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleApplySort = () => {
+    const newAppliedSort = {
+      option: sortOptions.selected.option,
+      order: sortOptions.selected.order,
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    setSortOptions((prev) => ({
+      selected: {
+        option: { label: "", value: "" },
+        order: { label: "", value: "" },
+      },
+      applied: [...prev.applied, newAppliedSort],
+    }));
+
+    onSelect(sortOptions.applied);
+  };
 
   return (
     <div className="relative w-fit" ref={dropdownRef}>
@@ -84,7 +99,7 @@ const SortPanel: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
       <button
         onClick={() => setSortPanelOpen(!sortPanelOpen)}
         className={`group w-fit text-sm flex items-center p-2 hover:text-secondary transition ${
-          sortPanelOpen ? "text-secondary" : "text-textColor-primary"
+          sortPanelOpen ? "text-secondary" : "text-primary"
         }`}
       >
         <ArrowUpDown className="w-5 h-5 ml-1" />
@@ -93,25 +108,19 @@ const SortPanel: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
         <div className="absolute right-0 bg-white border rounded-lg shadow-md p-4">
           <p className="text-sm font-medium mb-4">Sort by</p>
           {sortOptions.applied.length > 0 && (
-            <div>
+            <div className="mb-5">
               {sortOptions.applied.map((appliedOption, index) => (
-                <div className="flex gap-1 items-center rounded-2xl border-2 px-2 py-1 bg-secondary text-white border-secondary w-fit text-sm font-medium mb-6">
-                  {appliedOption.option.label}
-                  {appliedOption.order.value === "ascending" ? (
-                    <ArrowUpNarrowWide className="h-4 w-4" />
-                  ) : (
-                    <ArrowDownNarrowWide className="h-4 w-4" />
-                  )}
-                  <X
-                    onClick={() => {
-                      setSortOptions((prev) => ({
-                        ...prev,
-                        applied: prev.applied.filter((_, i) => i !== index),
-                      }));
-                    }}
-                    className="h-4 w-4 ml-2 hover:text-red-500 hover:cursor-pointer"
-                  />
-                </div>
+                <SortBadge
+                  key={index}
+                  option={appliedOption.option}
+                  order={appliedOption.order}
+                  onRemove={() => {
+                    setSortOptions((prev) => ({
+                      ...prev,
+                      applied: prev.applied.filter((_, i) => i !== index),
+                    }));
+                  }}
+                />
               ))}
             </div>
           )}
@@ -130,7 +139,6 @@ const SortPanel: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
             dropdownWidth={dropdownWidth}
             onMouseDown={(e) => e.stopPropagation()}
           />
-
           {sortOptions.selected.option.value && (
             <div className="mt-2 flex flex-col">
               <Dropdown
@@ -147,29 +155,11 @@ const SortPanel: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
                 }
                 dropdownWidth={dropdownWidth}
               />
-
               <button
                 onClick={() => {
-                  setSortOptions((prev) => ({
-                    selected: {
-                      option: { label: "", value: "" },
-                      order: { label: "", value: "" },
-                    },
-                    applied: [
-                      ...prev.applied,
-                      {
-                        option: prev.selected.option,
-                        order: prev.selected.order,
-                      },
-                    ],
-                  }));
-
-                  onSelect(
-                    sortOptions.selected.option.value,
-                    sortOptions.selected.order.value
-                  );
+                  handleApplySort();
                 }}
-                className="text-sm flex self-end border-secondary border-2 font-medium text-textColor-primary px-2 py-1 rounded-lg hover:bg-secondary hover:border-secondary hover:text-white transition mt-6"
+                className="text-sm flex self-end border-secondary border-2 font-medium text-primary px-2 py-1 rounded-lg hover:bg-secondary hover:border-secondary hover:text-white transition mt-6"
               >
                 Apply
               </button>
