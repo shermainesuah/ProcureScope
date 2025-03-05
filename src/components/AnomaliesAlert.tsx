@@ -80,9 +80,9 @@ const AnomaliesAlert: React.FC = () => {
   ];
 
   const severityColors = {
-    High: "text-error bg-red-100 rounded-full",
-    Moderate: "text-warning bg-orange-100 rounded-full",
-    Low: "text-success bg-green-100 rounded-full",
+    High: "text-error",
+    Moderate: "text-warning",
+    Low: "text-success",
   };
   const sortDropdownRef = useRef<HTMLDivElement>(null);
   const filterDropdownRef = useRef<HTMLDivElement>(null);

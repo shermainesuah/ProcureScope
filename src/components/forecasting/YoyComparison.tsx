@@ -88,6 +88,17 @@ const YoyComparison: React.FC = () => {
     []
   );
 
+  const getLineColor = (year: number) => {
+    switch (year) {
+      case 2023:
+        return "#91bbdc";
+      case 2024:
+        return "#0077B6";
+      default:
+        return "#000000";
+    }
+  };
+
   const xAxisLabels = useMemo(
     () =>
       Object.keys(processedData).sort(
@@ -150,6 +161,9 @@ const YoyComparison: React.FC = () => {
         name: year.toString(),
         type: "line",
         data: xAxisLabels.map((key) => processedData[key]?.[year] || 0),
+        itemStyle: {
+          color: getLineColor(year),
+        },
       })),
     }),
     [processedData, years, xAxisLabels, yAxisMetric]

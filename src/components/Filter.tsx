@@ -78,6 +78,36 @@ const filterConfig: Record<
     inputType: "text",
     placeholder: "Supplier name",
   },
+  product: {
+    label: "Product",
+    conditions: ["is", "is not", "contains", "does not contain"],
+    inputType: "text",
+    placeholder: "Product name",
+  },
+  requiredSupply: {
+    label: "Required Supply",
+    conditions: ["=", "!=", ">", "<", ">=", "<="],
+    inputType: "number",
+    placeholder: "Number of units",
+  },
+  availableSupply: {
+    label: "Available Supply",
+    conditions: ["=", "!=", ">", "<", ">=", "<="],
+    inputType: "number",
+    placeholder: "Number of units",
+  },
+  supplyShortage: {
+    label: "Supply Shortage",
+    conditions: ["=", "!=", ">", "<", ">=", "<="],
+    inputType: "number",
+    placeholder: "Percentage",
+  },
+  riskLevel: {
+    label: "Risk Level",
+    conditions: ["is"],
+    inputType: "select",
+    options: ["Low", "Medium", "High"],
+  },
 };
 
 const FilterDropdown: React.FC<FilterProps> = ({ types, onSelect }) => {
