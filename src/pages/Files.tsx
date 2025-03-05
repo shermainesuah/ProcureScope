@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   File,
   CirclePlus,
@@ -6,9 +6,6 @@ import {
   Trash2,
   Download,
   Filter,
-  ArrowUpDown,
-  ArrowUpNarrowWide,
-  ArrowDownNarrowWide,
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -133,47 +130,36 @@ const Files: React.FC = () => {
     });
   };
 
-  const [sortPanelOpen, setSortPanelOpen] = useState(false);
+  const sortOptions = [
+    {
+      label: "File Name",
+      value: "name",
+    },
+    {
+      label: "Date Uploaded",
+      value: "date",
+    },
+    {
+      label: "Total Records",
+      value: "records",
+    },
+    {
+      label: "File Owner",
+      value: "owner",
+    },
+  ];
 
-  const options = ["File Name", "Date Uploaded", "Total Records", "File Owner"];
-
-  const sortDropdownRef = useRef<HTMLDivElement>(null);
   const filterDropdownRef = useRef<HTMLDivElement>(null);
-  const [selectedOption, setSelectedOption] = useState<string>("");
-  const [selectedOrder, setSelectedOrder] = useState<string>("Ascending");
   const [selectedFilters, setSelectedFilters] = useState<FilterOption[]>([]);
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
 
   const closeSortDropdown = (option: string, order: string) => {
-    setSelectedOption(option);
-    setSelectedOrder(order);
+    console.log(option, order);
   };
 
   const closeFilterDropdown = (filters: FilterOption[]) => {
     setSelectedFilters(filters);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        sortDropdownRef.current &&
-        !sortDropdownRef.current.contains(event.target as Node)
-      ) {
-        setSortPanelOpen(false);
-      }
-      if (
-        filterDropdownRef.current &&
-        !filterDropdownRef.current.contains(event.target as Node)
-      ) {
-        setFilterDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <div className="main-container">
@@ -198,41 +184,11 @@ const Files: React.FC = () => {
             />
 
             <div className="flex gap-2 relative">
-              <div className="relative" ref={sortDropdownRef}>
-                <button
-                  onClick={() => setSortPanelOpen(!sortPanelOpen)}
-                  className={`group w-fit text-sm flex items-center p-2 hover:text-secondary transition ${
-                    sortPanelOpen ? "text-secondary" : "text-textColor-primary"
-                  }`}
-                >
-                  <ArrowUpDown className="w-5 h-5 ml-1" />
-                </button>
-                {sortPanelOpen && (
-                  <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-md p-4">
-                    <p className="text-sm font-medium">Sort by</p>
-                    {selectedOption && selectedOrder && (
-                      <div className="flex gap-1 items-center rounded-2xl border-2 px-2 py-1 bg-secondary text-white border-secondary mt-4 w-fit text-sm font-medium ">
-                        {selectedOption}
-                        {selectedOrder === "Ascending" ? (
-                          <ArrowUpNarrowWide className="h-4 w-4" />
-                        ) : (
-                          <ArrowDownNarrowWide className="h-4 w-4" />
-                        )}
-                        <X
-                          onClick={() => {
-                            setSelectedOption("");
-                            setSelectedOrder("");
-                          }}
-                          className="h-4 w-4 ml-2 hover:text-red-500 hover:cursor-pointer"
-                        />
-                      </div>
-                    )}
-                    <SortDropdown
-                      options={options}
-                      onSelect={closeSortDropdown}
-                    />
-                  </div>
-                )}
+              <div className="relative">
+                <SortDropdown
+                  options={sortOptions}
+                  onSelect={closeSortDropdown}
+                />
               </div>
 
               <div className="relative" ref={filterDropdownRef}>
@@ -247,7 +203,6 @@ const Files: React.FC = () => {
                     className="w-5 h-5 ml-1"
                     onClick={() => {
                       setFilterDropdownOpen(!filterDropdownOpen);
-                      setSortPanelOpen(false);
                     }}
                   />
                 </button>
