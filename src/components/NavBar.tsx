@@ -14,7 +14,7 @@ const Navbar = () => {
           <span className="text-xl font-bold font-mono">ProcureScope</span>
         </div>
       </Link>
-      {currentLocation.pathname === "/dashboard" && (
+      {currentLocation.pathname !== "/login" && (
         <div className="flex gap-7">
           <Link to="/data-import">
             <FileSpreadsheet className="h-5 w-5 text-textColor-primary hover:text-secondary hover:cursor-pointer" />
