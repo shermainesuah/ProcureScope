@@ -27,7 +27,7 @@ const Navbar = () => {
               onClick={() => {
                 navigate("/login");
               }}
-              className="h-5 text-primary hover:text-secondary w-5 hover:cursor-pointer"
+              className="h-5 text-primary hover:text-error w-5 hover:cursor-pointer"
             />
           </Link>
         </div>
