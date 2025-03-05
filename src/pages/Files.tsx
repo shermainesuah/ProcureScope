@@ -1,16 +1,14 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   File,
   CirclePlus,
   CircleUserRound,
   Trash2,
   Download,
-  Filter,
-  X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import FilterDropdown, { FilterOption } from "../components/Filter";
-import SortDropdown from "../components/SortDropdown";
+import FilterPanel, { FilterOption } from "../components/FilterPanel";
+import SortPanel from "../components/SortPanel";
 
 const Files: React.FC = () => {
   const [recentImports] = useState([
@@ -149,16 +147,13 @@ const Files: React.FC = () => {
     },
   ];
 
-  const filterDropdownRef = useRef<HTMLDivElement>(null);
-  const [selectedFilters, setSelectedFilters] = useState<FilterOption[]>([]);
-  const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
-
-  const closeSortDropdown = (option: string, order: string) => {
+  const updateSortOptions = (option: string, order: string) => {
+    // These data can be used to sort the files records
     console.log(option, order);
   };
 
   const closeFilterDropdown = (filters: FilterOption[]) => {
-    setSelectedFilters(filters);
+    console.log(filters);
   };
 
   return (
@@ -183,68 +178,12 @@ const Files: React.FC = () => {
               className="border p-2 rounded-lg w-1/3 focus:outline-none focus:ring-1 focus:border-secondary text-textPrimary"
             />
 
-            <div className="flex gap-2 relative">
-              <div className="relative">
-                <SortDropdown
-                  options={sortOptions}
-                  onSelect={closeSortDropdown}
-                />
-              </div>
-
-              <div className="relative" ref={filterDropdownRef}>
-                <button
-                  className={`group w-fit text-sm flex items-center  p-2 hover:text-secondary transition ${
-                    filterDropdownOpen
-                      ? "text-secondary"
-                      : "text-textColor-primary"
-                  }`}
-                >
-                  <Filter
-                    className="w-5 h-5 ml-1"
-                    onClick={() => {
-                      setFilterDropdownOpen(!filterDropdownOpen);
-                    }}
-                  />
-                </button>
-
-                {filterDropdownOpen && (
-                  <div className="relative">
-                    <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-md p-4">
-                      {selectedFilters.length > 0 && (
-                        <div className="flex flex-wrap gap-2 p-4">
-                          {selectedFilters.map((filter, index) => (
-                            <div
-                              key={index}
-                              className="flex gap-1 items-center rounded-2xl border-2 px-2 py-1 bg-secondary text-white border-secondary w-fit text-sm font-medium"
-                            >
-                              <span>
-                                {filter.label} {filter.condition}{" "}
-                                {typeof filter.value === "object"
-                                  ? `${filter.value.start} - ${filter.value.end}`
-                                  : filter.value}
-                              </span>
-
-                              <X
-                                onClick={() => {
-                                  setSelectedFilters((prevFilters) =>
-                                    prevFilters.filter((_, i) => i !== index)
-                                  );
-                                }}
-                                className="h-4 w-4 ml-2 hover:text-red-500 hover:cursor-pointer"
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      <FilterDropdown
-                        types={["name", "date", "records", "owner"]}
-                        onSelect={closeFilterDropdown}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
+            <div className="flex gap-2 relative items-center">
+              <SortPanel options={sortOptions} onSelect={updateSortOptions} />
+              <FilterPanel
+                types={["name", "date", "records", "owner"]}
+                onSelect={closeFilterDropdown}
+              />
             </div>
           </div>
 

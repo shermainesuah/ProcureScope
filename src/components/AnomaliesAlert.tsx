@@ -17,9 +17,9 @@ import {
   EllipsisVertical,
 } from "lucide-react";
 import ReactECharts from "echarts-for-react";
-import SortDropdown from "./SortDropdown";
+import SortDropdown from "./SortPanel";
 import { useEffect, useRef, useState } from "react";
-import FilterDropdown, { FilterOption } from "./Filter";
+import FilterDropdown, { FilterOption } from "./FilterPanel";
 
 const AnomaliesAlert: React.FC = () => {
   type SeverityLevel = "High" | "Moderate" | "Low";

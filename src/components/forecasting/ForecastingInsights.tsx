@@ -9,8 +9,8 @@ import {
   Filter,
   X,
 } from "lucide-react";
-import FilterDropdown, { FilterOption } from "../Filter";
-import SortDropdown from "../SortDropdown";
+import FilterDropdown, { FilterOption } from "../FilterPanel";
+import SortDropdown from "../SortPanel";
 import Dropdown from "../Dropdown";
 import { CallbackDataParams } from "echarts/types/dist/shared";
 

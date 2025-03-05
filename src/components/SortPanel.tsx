@@ -17,16 +17,16 @@ const orderOptions: Option[] = [
   { label: "Descending", value: "descending" },
 ];
 
-const SortDropdown: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
-  const [sortOptions, setSortOptions] = useState({
+const SortPanel: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
+  const [sortOptions, setSortOptions] = useState<{
+    selected: { option: Option; order: Option };
+    applied: { option: Option; order: Option }[];
+  }>({
     selected: {
       option: { label: "", value: "" },
       order: { label: "", value: "" },
     },
-    applied: {
-      option: { label: "", value: "" },
-      order: { label: "", value: "" },
-    },
+    applied: [],
   });
   const [sortPanelOpen, setSortPanelOpen] = useState(false);
 
@@ -58,10 +58,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
             option: { label: "", value: "" },
             order: { label: "", value: "" },
           },
-          applied: {
-            option: { label: "", value: "" },
-            order: { label: "", value: "" },
-          },
+          applied: [],
         });
         setSortPanelOpen(false);
       }
@@ -74,7 +71,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
   }, []);
 
   return (
-    <div className="relative w-fit mt-4" ref={dropdownRef}>
+    <div className="relative w-fit" ref={dropdownRef}>
       {/* Hidden element to measure longest option */}
       <div
         ref={textMeasureRef}
@@ -94,30 +91,34 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
       {sortPanelOpen && (
         <div className="absolute right-0 bg-white border rounded-lg shadow-md p-4">
           <p className="text-sm font-medium mb-4">Sort by</p>
-          {sortOptions.applied.option.value &&
-            sortOptions.applied.order.value && (
-              <div className="flex gap-1 items-center rounded-2xl border-2 px-2 py-1 bg-secondary text-white border-secondary w-fit text-sm font-medium mb-6">
-                {sortOptions.applied.option.label}
-                {sortOptions.applied.order.value === "ascending" ? (
-                  <ArrowUpNarrowWide className="h-4 w-4" />
-                ) : (
-                  <ArrowDownNarrowWide className="h-4 w-4" />
-                )}
-                <X
-                  onClick={() => {
-                    setSortOptions((prev) => ({
-                      ...prev,
-                      applied: {
-                        option: { label: "", value: "" },
-                        order: { label: "", value: "" },
-                      },
-                    }));
-                  }}
-                  className="h-4 w-4 ml-2 hover:text-red-500 hover:cursor-pointer"
-                />
-              </div>
-            )}
+          {sortOptions.applied.length > 0 && (
+            <div>
+              {sortOptions.applied.map((appliedOption) => (
+                <div className="flex gap-1 items-center rounded-2xl border-2 px-2 py-1 bg-secondary text-white border-secondary w-fit text-sm font-medium mb-6">
+                  {appliedOption.option.label}
+                  {appliedOption.order.value === "ascending" ? (
+                    <ArrowUpNarrowWide className="h-4 w-4" />
+                  ) : (
+                    <ArrowDownNarrowWide className="h-4 w-4" />
+                  )}
+                  <X
+                    onClick={() => {
+                      setSortOptions((prev) => ({
+                        ...prev,
+                        applied: prev.applied.filter(
+                          (sort) =>
+                            sort.option.value !== appliedOption.option.value
+                        ),
+                      }));
+                    }}
+                    className="h-4 w-4 ml-2 hover:text-red-500 hover:cursor-pointer"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
           <Dropdown
+            value={sortOptions.selected.option.value}
             options={options}
             onSelect={(selectedOption) =>
               setSortOptions((prev) => ({
@@ -135,6 +136,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
           {sortOptions.selected.option.value && (
             <div className="mt-2 flex flex-col">
               <Dropdown
+                value={sortOptions.selected.order.value}
                 options={orderOptions}
                 onSelect={(selectedOrder) =>
                   setSortOptions((prev) => ({
@@ -151,12 +153,19 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
               <button
                 onClick={() => {
                   setSortOptions((prev) => ({
-                    ...prev,
-                    applied: {
-                      option: prev.selected.option,
-                      order: prev.selected.order,
+                    selected: {
+                      option: { label: "", value: "" },
+                      order: { label: "", value: "" },
                     },
+                    applied: [
+                      ...prev.applied,
+                      {
+                        option: prev.selected.option,
+                        order: prev.selected.order,
+                      },
+                    ],
                   }));
+
                   onSelect(
                     sortOptions.selected.option.value,
                     sortOptions.selected.order.value
@@ -174,4 +183,4 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
   );
 };
 
-export default SortDropdown;
+export default SortPanel;

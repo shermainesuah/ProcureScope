@@ -15,6 +15,7 @@ interface DropdownProps {
   onSelect: (option: Option) => void;
   placeholder?: string;
   dropdownWidth?: string;
+  value: string;
   onMouseDown?: (e: React.MouseEvent) => void;
 }
 
@@ -26,11 +27,13 @@ export interface Option {
 const Dropdown: React.FC<DropdownProps> = ({
   options,
   onSelect,
+  value,
   placeholder = "Select",
   dropdownWidth,
 }) => {
   return (
     <Select
+      value={value}
       onValueChange={(val) => {
         const selectedOption = options.find((opt) => opt.value === val);
         if (selectedOption) {
@@ -48,7 +51,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <SelectPortal>
         <SelectContent
           className="bg-white border text-sm shadow-md p-1 mt-10"
-          onMouseDown={(e) => e.stopPropagation()} // Prevents closing on select
+          onMouseDown={(e) => e.stopPropagation()}
         >
           <SelectViewport>
             {options.map(({ label, value }) => (
