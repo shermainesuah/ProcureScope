@@ -10,56 +10,58 @@ import {
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
+const recentImports = [
+  {
+    id: 1,
+    fileName: "procurement_jan.xlsx",
+    date: "2025-02-25",
+    owner: "Maria Gondalez",
+    totalRecords: 1500,
+  },
+  {
+    id: 2,
+    fileName: "procurement_feb.csv",
+    date: "2025-02-20",
+    owner: "Maria Gondalez",
+    totalRecords: 2000,
+  },
+  {
+    id: 3,
+    fileName: "procurement_mar.xlsx",
+    date: "2025-02-15",
+    owner: "Jones Brooke",
+    totalRecords: 1800,
+  },
+  {
+    id: 4,
+    fileName: "procurement_apr.xlsx",
+    date: "2025-02-10",
+    owner: "Maria Gondalez",
+    totalRecords: 2200,
+  },
+  {
+    id: 5,
+    fileName: "procurement_may.csv",
+    date: "2025-02-05",
+    owner: "James Young",
+    totalRecords: 1700,
+  },
+];
+
 const DataImport: React.FC = () => {
   const [uploadingDataScenario, setUploadingDataScenario] = useState(false);
-  const [progress, setProgress] = useState<number>(0);
+  const [progress, setProgress] = useState(0);
   const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [invalidDataFormatScenario, setInvalidDataFormatScenario] =
     useState(false);
   const [showFailed, setShowFailed] = useState(false);
   const [failedUpload, setFailedUpload] = useState(false);
+
   const navigate = useNavigate();
 
-  const [recentImports] = useState([
-    {
-      id: 1,
-      fileName: "procurement_jan.xlsx",
-      date: "2025-02-25",
-      owner: "Maria Gondalez",
-      totalRecords: 1500,
-    },
-    {
-      id: 2,
-      fileName: "procurement_feb.csv",
-      date: "2025-02-20",
-      owner: "Maria Gondalez",
-      totalRecords: 2000,
-    },
-    {
-      id: 3,
-      fileName: "procurement_mar.xlsx",
-      date: "2025-02-15",
-      owner: "Jones Brooke",
-      totalRecords: 1800,
-    },
-    {
-      id: 4,
-      fileName: "procurement_apr.xlsx",
-      date: "2025-02-10",
-      owner: "Maria Gondalez",
-      totalRecords: 2200,
-    },
-    {
-      id: 5,
-      fileName: "procurement_may.csv",
-      date: "2025-02-05",
-      owner: "James Young",
-      totalRecords: 1700,
-    },
-  ]);
-
-  const simulateUpload = async () => {
+  // For demo purposes to stimulate successfully uploaded scenario
+  const simulateSuccessUpload = async () => {
     setProgress(0);
     for (let i = 0; i <= 100; i += 5) {
       await new Promise((resolve) => setTimeout(resolve, 200));
@@ -70,6 +72,7 @@ const DataImport: React.FC = () => {
     }
   };
 
+  // For demo purposes to stimulate failed uploaded scenario
   const simulateFailUpload = async () => {
     setProgress(0);
     for (let i = 0; i <= 70; i += 5) {
@@ -163,24 +166,21 @@ const DataImport: React.FC = () => {
         </table>
       </div>
       <div className="mt-10 w-full max-w-xl xl:max-w-2xl p-6 bg-white rounded-lg border relative">
+        {/* Hidden buttons for demo purposes*/}
         <button
           className="absolute text-white bottom-0"
           onClick={async () => {
             setUploadingDataScenario(true);
-            await simulateUpload();
+            await simulateSuccessUpload();
           }}
-        >
-          hi
-        </button>
+        />
         <button
           className="absolute text-white right-0"
           onClick={async () => {
             setInvalidDataFormatScenario(true);
             await simulateFailUpload();
           }}
-        >
-          bye
-        </button>
+        />
         <h2 className="text-lg font-semibold mb-4 text-primary">
           Upload Procurement Data
         </h2>

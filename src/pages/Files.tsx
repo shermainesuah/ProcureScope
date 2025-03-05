@@ -153,6 +153,7 @@ const Files: React.FC = () => {
   };
 
   const closeFilterDropdown = (filters: FilterOption[]) => {
+    // These data can be used to filter the files records
     console.log(filters);
   };
 
