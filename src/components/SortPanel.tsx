@@ -93,7 +93,7 @@ const SortPanel: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
           <p className="text-sm font-medium mb-4">Sort by</p>
           {sortOptions.applied.length > 0 && (
             <div>
-              {sortOptions.applied.map((appliedOption) => (
+              {sortOptions.applied.map((appliedOption, index) => (
                 <div className="flex gap-1 items-center rounded-2xl border-2 px-2 py-1 bg-secondary text-white border-secondary w-fit text-sm font-medium mb-6">
                   {appliedOption.option.label}
                   {appliedOption.order.value === "ascending" ? (
@@ -105,10 +105,7 @@ const SortPanel: React.FC<SortDropdownProps> = ({ options, onSelect }) => {
                     onClick={() => {
                       setSortOptions((prev) => ({
                         ...prev,
-                        applied: prev.applied.filter(
-                          (sort) =>
-                            sort.option.value !== appliedOption.option.value
-                        ),
+                        applied: prev.applied.filter((_, i) => i !== index),
                       }));
                     }}
                     className="h-4 w-4 ml-2 hover:text-red-500 hover:cursor-pointer"
