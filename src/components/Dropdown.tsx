@@ -18,15 +18,17 @@ interface DropdownProps {
   dropdownWidth?: string;
   value: string;
   onMouseDown?: (e: React.MouseEvent) => void;
+  className?: string;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({
+const Dropdown = ({
   options,
   onSelect,
   value,
   placeholder = "Select",
   dropdownWidth,
-}) => {
+  className,
+}: DropdownProps) => {
   const handleValueChange = (value: string) => {
     const selectedOption = options.find((opt) => opt.value === value);
     if (selectedOption) {
@@ -38,7 +40,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     <Select value={value} onValueChange={handleValueChange}>
       <SelectTrigger
         aria-label="Select an option"
-        className="group rounded-lg border-primary border-2 text-sm flex items-center justify-between text-textColor-primary py-1 px-3 transition hover:border-secondary hover:text-secondary w-full"
+        className={`group rounded-lg border-primary border-2 text-sm flex items-center justify-between text-textColor-primary py-1 px-3 transition hover:border-secondary hover:text-secondary w-full ${className}`}
         style={{ width: dropdownWidth }}
       >
         <SelectValue placeholder={placeholder} />
