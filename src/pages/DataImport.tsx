@@ -9,14 +9,10 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { FileDataList } from "../types";
+import { formatDate } from "../utils";
 
-const recentImportData: {
-  id: number;
-  fileName: string;
-  date: string;
-  owner: string;
-  totalRecords: number;
-}[] = [
+const recentImportData: FileDataList = [
   {
     id: 1,
     fileName: "procurement_jan.xlsx",
@@ -63,14 +59,6 @@ const DataImport = () => {
     useState(false);
   const [failedUpload, setFailedUpload] = useState(false);
   const [showFailed, setShowFailed] = useState(false);
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  };
 
   // For demo purposes to stimulate successfully uploaded scenario
   const simulateSuccessUpload = async () => {
@@ -133,48 +121,48 @@ const DataImport = () => {
             Preview of the required format for the template:
           </p>
           <div className="px-6 pt-6 border max-w-3xl">
-            <table className="text-xs rounded-lg">
+            <table className="text-xs rounded-lg text-primary">
               <thead className="bg-gray">
-                <tr>
-                  <th className="border p-2">Order ID</th>
-                  <th className="border p-2">Order Date</th>
-                  <th className="border p-2">Supplier</th>
-                  <th className="border p-2">Product Name</th>
-                  <th className="border p-2">Category</th>
-                  <th className="border p-2">Quantity</th>
-                  <th className="border p-2">Unit Price</th>
-                  <th className="border p-2">Total Cost</th>
-                  <th className="border p-2">Currency</th>
-                  <th className="border p-2">Country</th>
-                  <th className="border p-2">Region</th>
+                <tr className="[&>th]:p-2 [&>th]:border">
+                  <th>Order ID</th>
+                  <th>Order Date</th>
+                  <th>Supplier</th>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Quantity</th>
+                  <th>Unit Price</th>
+                  <th>Total Cost</th>
+                  <th>Currency</th>
+                  <th>Country</th>
+                  <th>Region</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="text-primary">
-                  <td className="border p-2 border-l">PO-2024-00123</td>
-                  <td className="border p-2">2024-02-24</td>
-                  <td className="border p-2">ABC Agro Supplies</td>
-                  <td className="border p-2">Industrial Flour</td>
-                  <td className="border p-2">Raw Materials</td>
-                  <td className="border p-2">5000</td>
-                  <td className="border p-2">$2.50</td>
-                  <td className="border p-2">$12,500</td>
-                  <td className="border p-2">USD</td>
-                  <td className="border p-2">Philippines</td>
-                  <td className="border p-2 border-r">Asia</td>
+                <tr className="[&>td]:p-2 [&>td]:border">
+                  <td className="border-l">PO-2024-00123</td>
+                  <td>2024-02-24</td>
+                  <td>ABC Agro Supplies</td>
+                  <td>Industrial Flour</td>
+                  <td>Raw Materials</td>
+                  <td>5000</td>
+                  <td>$2.50</td>
+                  <td>$12,500</td>
+                  <td>USD</td>
+                  <td>Philippines</td>
+                  <td className="border-r">Asia</td>
                 </tr>
-                <tr>
-                  <td className="border p-2 border-l">...</td>
-                  <td className="border p-2">...</td>
-                  <td className="border p-2">...</td>
-                  <td className="border p-2">...</td>
-                  <td className="border p-2">...</td>
-                  <td className="border p-2">...</td>
-                  <td className="border p-2">...</td>
-                  <td className="border p-2">...</td>
-                  <td className="border p-2">...</td>
-                  <td className="border p-2">...</td>
-                  <td className="border p-2 border-r">...</td>
+                <tr className="[&>td]:p-2 [&>td]:border">
+                  <td className="border-l">...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td className="border-r">...</td>
                 </tr>
               </tbody>
             </table>
