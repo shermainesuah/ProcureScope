@@ -181,19 +181,21 @@ const filterConfig: FilterConfig = {
 };
 
 const FilterPanel = ({ types, onSelect }: FilterProps) => {
-  const [selectedFilters, setselectedFilters] = useState<
+  const [selectedConditions, setselectedConditions] = useState<
     Partial<Record<FilterKey, Option>>
   >({});
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
-  const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
+  const [inputValues, setInputValues] = useState<
+    Partial<Record<FilterKey, string>>
+  >({});
   const panelRef = useRef<HTMLDivElement>(null);
   const [appliedFilters, setAppliedFilters] = useState<FilterOption[]>([]);
 
-  const renderInputField = (config: FilterBody, type: string) => {
+  const renderInputField = (config: FilterBody, type: FilterKey) => {
     if (config.inputType === "select" && config.options) {
       return (
         <Dropdown
-          value={inputValues[type]}
+          value={inputValues[type] || ""}
           options={config.options}
           onSelect={(selected) =>
             setInputValues((prev) => ({
@@ -206,28 +208,28 @@ const FilterPanel = ({ types, onSelect }: FilterProps) => {
       );
     }
 
-    if (selectedFilters[type as FilterKey]?.value === "in between") {
+    if (selectedConditions[type]?.value === "in between") {
       return (
         <div className="grid gap-2">
           <input
             type="date"
             className="border p-2 rounded-lg"
-            value={inputValues[`${type}-start`] || ""}
+            value={inputValues["date-start" as FilterKey] || ""}
             onChange={(e) =>
               setInputValues((prev) => ({
                 ...prev,
-                [`${type}-start`]: e.target.value,
+                ["date-start"]: e.target.value,
               }))
             }
           />
           <input
             type="date"
             className="border p-2 rounded-lg"
-            value={inputValues[`${type}-end`] || ""}
+            value={inputValues["date-end" as FilterKey] || ""}
             onChange={(e) =>
               setInputValues((prev) => ({
                 ...prev,
-                [`${type}-end`]: e.target.value,
+                ["date-end"]: e.target.value,
               }))
             }
           />
@@ -253,25 +255,25 @@ const FilterPanel = ({ types, onSelect }: FilterProps) => {
 
   const handleClickOutside = (event: MouseEvent) => {
     if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
-      setselectedFilters({});
+      setselectedConditions({});
       setInputValues({});
       setFilterDropdownOpen(false);
     }
   };
 
   const handleApplyFilter = () => {
-    const filters = Object.keys(selectedFilters).map((type) => {
+    const filters = Object.keys(selectedConditions).map((type) => {
       const filterKey = type as FilterKey;
       const filterConfigItem = filterConfig[type as keyof typeof filterConfig];
 
-      if (selectedFilters[filterKey]?.value === "in between") {
+      if (selectedConditions[filterKey]?.value === "in between") {
         return {
           label: filterConfigItem.label,
           type,
-          condition: selectedFilters[filterKey] as Option,
+          condition: selectedConditions[filterKey] as Option,
           value: {
-            start: inputValues[`${type}-start`] || "",
-            end: inputValues[`${type}-end`] || "",
+            start: inputValues["date-start" as FilterKey] || "",
+            end: inputValues["date-end" as FilterKey] || "",
           },
         };
       }
@@ -279,12 +281,12 @@ const FilterPanel = ({ types, onSelect }: FilterProps) => {
       return {
         label: filterConfigItem.label,
         type,
-        condition: selectedFilters[filterKey] as Option,
-        value: inputValues[type] || "",
+        condition: selectedConditions[filterKey] as Option,
+        value: inputValues[filterKey] || "",
       };
     });
     setAppliedFilters(filters.map((prev) => ({ ...prev, filters })));
-    setselectedFilters({});
+    setselectedConditions({});
     setInputValues({});
     onSelect(filters);
   };
@@ -361,11 +363,11 @@ const FilterPanel = ({ types, onSelect }: FilterProps) => {
                         <div>
                           <Dropdown
                             value={
-                              selectedFilters[type as FilterKey]?.value ?? ""
+                              selectedConditions[type as FilterKey]?.value ?? ""
                             }
                             options={conditions}
                             onSelect={(condition) =>
-                              setselectedFilters((prev) => ({
+                              setselectedConditions((prev) => ({
                                 ...prev,
                                 [type]: condition,
                               }))
