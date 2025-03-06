@@ -40,7 +40,7 @@ const Dropdown = ({
     <Select value={value} onValueChange={handleValueChange}>
       <SelectTrigger
         aria-label="Select an option"
-        className={`group rounded-lg border-primary border-2 text-sm flex items-center justify-between text-textColor-primary py-1 px-3 transition hover:border-secondary hover:text-secondary w-full ${className}`}
+        className={`group data-[state=open]:border-secondary data-[state=open]:text-secondary rounded-lg border-primary border-2 text-sm flex items-center justify-between text-primary py-1 px-3 transition hover:border-secondary hover:text-secondary w-full ${className}`}
         style={{ width: dropdownWidth }}
       >
         <SelectValue placeholder={placeholder} />
@@ -48,15 +48,17 @@ const Dropdown = ({
       </SelectTrigger>
       <SelectPortal>
         <SelectContent
-          className="bg-white border text-sm shadow-md p-1 mt-10"
+          position="popper"
+          className="bg-white border text-sm shadow-md p-1 mt-1 z-20"
           onMouseDown={(e) => e.stopPropagation()}
+          style={{ width: dropdownWidth }}
         >
           <SelectViewport>
             {options.map(({ label, value }) => (
               <SelectItem
                 key={value}
                 value={value}
-                className="block w-full text-left p-2 hover:bg-gray-200 cursor-pointer"
+                className="block w-full text-left p-2 hover:bg-gray-200 focus:ring-0 outline-none cursor-pointer"
               >
                 <SelectItemText>{label}</SelectItemText>
               </SelectItem>
