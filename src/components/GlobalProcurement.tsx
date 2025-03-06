@@ -2,17 +2,26 @@ import { ExternalLink, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import WorldMap from "react-world-map";
 
-type Product = {
+type ContinentCode = "NA" | "SA" | "EU" | "AF" | "AS" | "OC";
+
+type CountriesInRegionData = Record<ContinentCode, CountryData[]>;
+
+type RegionProcurementData = Record<ContinentCode, RegionData>;
+interface Product {
   name: string;
   percentage: string;
-};
+}
 
-type Supplier = {
+interface Supplier {
   name: string;
   share: string;
-};
+}
 
-type CountryData = {
+interface SupplierCountry extends Supplier {
+  country: string;
+}
+
+interface CountryData {
   country: string;
   procurementVolume: number;
   marketShare: string;
@@ -20,21 +29,15 @@ type CountryData = {
   topSuppliers: Supplier[];
   avgCostPerUnit: string;
   totalCost: string;
-};
+}
 
-type CountriesInRegionData = {
-  [key: string]: CountryData[];
-};
-
-type RegionProcurementData = Record<string, RegionDataType>;
-
-interface RegionDataType {
+interface RegionData {
   name: string;
   volume: number;
   marketShare: string;
   growthRate: string;
-  topProducts: { name: string; percentage: string }[];
-  topSuppliers: { name: string; country: string; share: string }[];
+  topProducts: Product[];
+  topSuppliers: SupplierCountry[];
   avgCostPerUnit: string;
   totalCost: string;
   logistics: {
@@ -365,93 +368,105 @@ const continentProcurementData: RegionProcurementData = {
   },
 };
 
-const generateContinentData = (selected: string | null) => {
-  if (!selected) return null;
-  const regionData = continentProcurementData[selected.toUpperCase()];
-
-  return (
-    <ul className="list-disc list-inside text-xs text-textColor-primary space-y-1 mt-4">
-      <li className="font-semibold">
-        Total Procurement Volume:{" "}
-        <span className="font-normal">{regionData.volume} units</span>
-      </li>
-      <li className="font-semibold">
-        Market Share:{" "}
-        <span className="font-normal">{regionData.marketShare}</span>
-      </li>
-      <li className="font-semibold">
-        Growth Rate:{" "}
-        <span className="font-normal">{regionData.growthRate}</span>
-      </li>
-      <li className="font-semibold">
-        Top Products:
-        <ul className="list-disc list-inside ml-4 font-normal">
-          {regionData.topProducts.map((product) => (
-            <li key={product.name}>
-              {product.name}: {product.percentage}
-            </li>
-          ))}
-        </ul>
-      </li>
-      <li className="font-semibold">
-        Top Suppliers:
-        <ul className="list-disc list-inside ml-4 font-normal">
-          {regionData.topSuppliers.map((supplier) => (
-            <li key={supplier.name}>
-              {supplier.name} ({supplier.country}) - {supplier.share} share
-            </li>
-          ))}
-        </ul>
-      </li>
-      <li className="font-semibold">
-        Avg Cost Per Unit:{" "}
-        <span className="font-normal">{regionData.avgCostPerUnit}</span>
-      </li>
-      <li className="font-semibold">
-        Total Cost: <span className="font-normal">{regionData.totalCost}</span>
-      </li>
-      <li className="font-semibold">
-        Logistics:
-        <ul className="list-disc list-inside ml-4 font-normal">
-          <li>Major Hubs: {regionData.logistics.majorHubs.join(", ")}</li>
-          <li>Avg Lead Time: {regionData.logistics.avgLeadTime}</li>
-        </ul>
-      </li>
-      <li className="font-semibold">
-        Risks:{" "}
-        <span className="font-normal">{regionData.risks.join(", ")}</span>
-      </li>
-    </ul>
-  );
-};
-
-const getColorByVolume = (volume: number) => {
-  if (volume > 8000) return "#0A2540";
-  if (volume > 5000) return "#1D4E89";
-  if (volume > 3000) return "#477DB3";
-  if (volume > 1000) return "#73A5D8";
-  return "#B3DFF2";
-};
-
 const GlobalProcurement = () => {
-  const [selected, setSelected] = useState("");
+  const [selectedContinent, setSelectedContinent] =
+    useState<ContinentCode | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
+  const generateContinentData = (selected: ContinentCode) => {
+    const regionData = continentProcurementData[selected];
+
+    return (
+      <ul className="list-disc list-inside text-xs font-semibold text-primary space-y-1 mt-4">
+        <li>
+          Total Procurement Volume:
+          <span className="font-normal ml-1">{regionData.volume} units</span>
+        </li>
+        <li>
+          Market Share:
+          <span className="font-normal ml-1">{regionData.marketShare}</span>
+        </li>
+        <li>
+          Growth Rate:
+          <span className="font-normal ml-1">{regionData.growthRate}</span>
+        </li>
+        <li>
+          Top Products:
+          <ul className="list-disc list-inside ml-4 font-normal">
+            {regionData.topProducts.map((product) => (
+              <li key={product.name}>
+                {product.name}: {product.percentage}
+              </li>
+            ))}
+          </ul>
+        </li>
+        <li>
+          Top Suppliers:
+          <ul className="list-disc list-inside ml-4 font-normal">
+            {regionData.topSuppliers.map((supplier) => (
+              <li key={supplier.name}>
+                {supplier.name} ({supplier.country}) - {supplier.share} share
+              </li>
+            ))}
+          </ul>
+        </li>
+        <li>
+          Avg Cost Per Unit:
+          <span className="font-normal ml-1">{regionData.avgCostPerUnit}</span>
+        </li>
+        <li>
+          Total Cost:
+          <span className="font-normal ml-1">{regionData.totalCost}</span>
+        </li>
+        <li>
+          Logistics:
+          <ul className="list-disc list-inside ml-4 font-normal">
+            <li>Major Hubs: {regionData.logistics.majorHubs.join(", ")}</li>
+            <li>Avg Lead Time: {regionData.logistics.avgLeadTime}</li>
+          </ul>
+        </li>
+        <li>
+          Risks:
+          <span className="font-normal ml-1">
+            {regionData.risks.join(", ")}
+          </span>
+        </li>
+      </ul>
+    );
+  };
+
+  const getMapColorByVolume = (volume: number) => {
+    switch (true) {
+      case volume > 8000:
+        return "#0A2540";
+      case volume > 5000:
+        return "#154B83";
+      case volume > 3000:
+        return "#388BE0";
+      case volume > 1000:
+        return "#90BEEE";
+      default:
+        return "#A7CCF1";
+    }
+  };
+
   useEffect(() => {
-    Object.entries(continentProcurementData).forEach(([key, region]) => {
-      const continentElement = document.getElementById(
-        key
-      ) as SVGGElement | null;
-      if (continentElement) {
-        const volume = region.volume;
-        const color = getColorByVolume(volume);
-        continentElement.style.fill = color;
+    (Object.keys(continentProcurementData) as ContinentCode[]).forEach(
+      (continent) => {
+        const continentElement = document.getElementById(
+          continent
+        ) as SVGGElement | null;
+        if (continentElement) {
+          const volume = continentProcurementData[continent].volume;
+          const color = getMapColorByVolume(volume);
+          continentElement.style.fill = color;
+        }
       }
-    });
+    );
   }, []);
 
   const selectContinent = (continentCode: string) => {
-    setSelected(continentCode.toUpperCase());
+    setSelectedContinent(continentCode.toUpperCase() as ContinentCode);
     setIsPanelOpen(true);
   };
 
@@ -459,61 +474,66 @@ const GlobalProcurement = () => {
     <div>
       <div>
         <h2>Global Procurement View</h2>
-        <p className="text-xs text-gray-text mt-1">
+        <p className="text-xs text-tertiary mt-1">
           Click on continent for more detailed information
         </p>
         <div className="flex relative mt-5 max-h-[556.79px]">
           <div className={`${isPanelOpen ? "max-w-[700px]" : "w-full"}`}>
             <div className="bg-gray p-6 flex items-center justify-center world-map">
-              <WorldMap selected={selected} onSelect={selectContinent} />
+              <WorldMap
+                selected={selectedContinent}
+                onSelect={selectContinent}
+              />
             </div>
-            <div className="flex flex-row border p-4 gap-8">
-              <div className="mt-4 space-y-3">
-                <p className="text-sm text-textColor-primary font-semibold">
+            <div className="flex flex-row border p-6 gap-8">
+              <div className="space-y-3 font-semibold text-primary text-sm">
+                <p>
                   Highest Procurement Region:
-                  <span className="font-normal"> Asia (153,029 units)</span>
+                  <span className="font-normal ml-1">Asia (153,029 units)</span>
                 </p>
-                <p className="text-sm text-textColor-primary font-semibold">
+                <p>
                   Lowest Procurement Region:
-                  <span className="font-normal"> Oceania (2,178 units)</span>
+                  <span className="font-normal ml-1">
+                    Oceania (2,178 units)
+                  </span>
                 </p>
-                <p className="text-sm text-textColor-primary font-semibold">
+                <p>
                   Total Global Procurement Volume:
-                  <span className="font-normal"> 582,281 units</span>
+                  <span className="font-normal ml-1"> 582,281 units</span>
                 </p>
               </div>
-              <div className="mt-4 space-y-1">
-                <p className="text-sm text-textColor-primary font-semibold">
+              <div className="space-y-1">
+                <p className="text-sm text-primary font-semibold">
                   Procurement Volume Distribution:
                 </p>
-                <ul className="grid grid-cols-3 gap-x-10 list-disc list-inside text-sm text-textColor-primary">
+                <ul className="grid grid-cols-3 gap-x-10 list-disc list-inside text-sm text-primary">
                   <li>
-                    Asia: <span className="font-normal">50%</span>
+                    Asia: <span className="font-normal ml-1">50%</span>
                   </li>
                   <li>
-                    Europe: <span className="font-normal">21%</span>
+                    Europe: <span className="font-normal ml-1">21%</span>
                   </li>
                   <li>
-                    Africa: <span className="font-normal">5%</span>
+                    Africa: <span className="font-normal ml-1">5%</span>
                   </li>
                   <li>
-                    North America: <span className="font-normal">15%</span>
+                    North America: <span className="font-normal ml-1">15%</span>
                   </li>
                   <li>
-                    South America: <span className="font-normal">7%</span>
+                    South America: <span className="font-normal ml-1">7%</span>
                   </li>
 
                   <li>
-                    Oceania: <span className="font-normal">2%</span>
+                    Oceania: <span className="font-normal ml-1">2%</span>
                   </li>
                   <li>
-                    Antarctica: <span className="font-normal">0.5%</span>
+                    Antarctica: <span className="font-normal ml-1">0.5%</span>
                   </li>
                 </ul>
               </div>
             </div>
           </div>
-          {selected && (
+          {selectedContinent && (
             <div
               className={` flex flex-grow flex-col transform transition-all overflow-y-scroll duration-300 p-6 ${
                 isPanelOpen
@@ -522,28 +542,28 @@ const GlobalProcurement = () => {
               }`}
             >
               <div className="flex justify-end gap-3">
-                <ExternalLink className="h-4 w-4 hover:cursor-pointer hover:text-secondary text-primary " />
+                <ExternalLink className="h-5 w-5 hover:cursor-pointer hover:text-secondary text-primary " />
                 <X
                   onClick={() => setIsPanelOpen(false)}
-                  className="h-4 w-4 hover:cursor-pointer hover:text-error text-primary "
+                  className="h-5 w-5 hover:cursor-pointer hover:text-error text-primary "
                 />
               </div>
-              <p className="font-semibold text-md text-textColor-primary mt-2">
-                {continentProcurementData[selected].name}
+              <p className="font-semibold text-md text-primary mt-2">
+                {continentProcurementData[selectedContinent].name}
               </p>
 
-              <ul className="list-disc list-inside text-xs text-textColor-primary">
-                {generateContinentData(selected)}
+              <ul className="list-disc list-inside text-xs text-primary">
+                {generateContinentData(selectedContinent)}
               </ul>
-              {countryProcurementData[selected].map((country) => (
+              {countryProcurementData[selectedContinent].map((country) => (
                 <div
                   key={country.country}
                   className="border rounded-lg p-4 mt-6"
                 >
-                  <p className="font-semibold text-md text-textColor-primary">
+                  <p className="font-semibold text-md text-primary">
                     {country.country}
                   </p>
-                  <ul className="list-none list-inside text-xs text-textColor-primary space-y-1 mt-2">
+                  <ul className="list-none list-inside text-xs text-primary space-y-1 mt-2">
                     <li>
                       Procurement Volume: {country.procurementVolume} units
                     </li>
