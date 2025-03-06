@@ -18,4 +18,19 @@ export interface FilterOption {
   value: string | { start: string; end: string };
 }
 
+export type FilterKey =
+  | "name"
+  | "date"
+  | "records"
+  | "owner"
+  | "severity"
+  | "anomalyType"
+  | "reviewStatus"
+  | "supplier"
+  | "product"
+  | "requiredSupply"
+  | "availableSupply"
+  | "supplyShortage"
+  | "riskLevel";
+
 export type FileDataList = FileData[];

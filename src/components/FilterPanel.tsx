@@ -2,22 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Dropdown from "./Dropdown";
 import React from "react";
 import { Filter, X } from "lucide-react";
-import type { FilterOption, Option } from "../types";
-
-type FilterKey =
-  | "name"
-  | "date"
-  | "records"
-  | "owner"
-  | "severity"
-  | "anomalyType"
-  | "reviewStatus"
-  | "supplier"
-  | "product"
-  | "requiredSupply"
-  | "availableSupply"
-  | "supplyShortage"
-  | "riskLevel";
+import type { FilterKey, FilterOption, Option } from "../types";
 
 interface FilterProps {
   types: FilterKey[];
@@ -301,7 +286,7 @@ const FilterPanel = ({ types, onSelect }: FilterProps) => {
   return (
     <div ref={panelRef}>
       <button
-        className={`group w-fit text-sm flex items-center  p-2 hover:text-secondary transition ${
+        className={`group w-fit text-sm flex items-center hover:text-secondary transition ${
           filterDropdownOpen ? "text-secondary" : "text-textColor-primary"
         }`}
       >
@@ -313,7 +298,7 @@ const FilterPanel = ({ types, onSelect }: FilterProps) => {
         />
       </button>
       {filterDropdownOpen && (
-        <div className="relative">
+        <div className="relative z-10">
           <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-md p-6">
             {appliedFilters.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-6">
