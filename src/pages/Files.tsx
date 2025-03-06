@@ -6,10 +6,11 @@ import {
   Download,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import FilterPanel, { FilterOption } from "../components/FilterPanel";
+import FilterPanel from "../components/FilterPanel";
 import SortPanel from "../components/SortPanel";
 import { FileDataList } from "../types";
 import { formatDate } from "../utils";
+import type { FilterKey, FilterOption, Option } from "../types";
 
 const filesData: FileDataList = [
   {
@@ -138,12 +139,14 @@ const sortOptions = [
   },
 ];
 
-const FilterOptions = ["name", "date", "records", "owner"];
+const FilterOptions: FilterKey[] = ["name", "date", "records", "owner"];
 
 const Files: React.FC = () => {
-  const updateSortOptions = (option: string, order: string) => {
+  const updateSortOptions = (
+    selectedOptions: { option: Option; order: Option }[]
+  ) => {
     // These data can be used to sort the files records
-    console.log(option, order);
+    console.log(selectedOptions);
   };
 
   const updateFilterOptions = (filters: FilterOption[]) => {
