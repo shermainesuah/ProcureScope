@@ -118,7 +118,7 @@ const AnomaliesAlert = () => {
           <div className="flex gap-3 items-center">
             <SortPanel options={sortOptions} onSelect={updateSortOptions} />
             <FilterPanel types={filterOptions} onSelect={updateFilterOptions} />
-            <EllipsisVertical className="w-5 h-5 text-primary hover:text-tertiary hover:cursor-pointer" />
+            <EllipsisVertical className="w-5 h-5 text-primary hover:text-secondary hover:cursor-pointer" />
           </div>
         </div>
       </div>
