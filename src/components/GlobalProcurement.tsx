@@ -1,6 +1,9 @@
 import { ExternalLink, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { WorldMap } from "react-world-map";
+import * as WorldMap from "react-world-map";
+
+// @ts-expect-error - still looking for fix regarding this package import
+const WorldMapComp = WorldMap.default;
 
 export type ContinentCode = "NA" | "SA" | "EU" | "AF" | "AS" | "OC";
 
@@ -418,7 +421,7 @@ const GlobalProcurement = () => {
         <div className="flex relative mt-5 max-h-[556.79px]">
           <div className={`${isPanelOpen ? "max-w-[700px]" : "w-full"}`}>
             <div className="bg-gray p-6 flex items-center justify-center world-map">
-              <WorldMap
+              <WorldMapComp
                 selected={selectedContinent as string}
                 onSelect={selectContinent}
               />
