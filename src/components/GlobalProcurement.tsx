@@ -1,6 +1,6 @@
 import { ExternalLink, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import WorldMap from "react-world-map";
+import { WorldMap } from "react-world-map";
 
 export type ContinentCode = "NA" | "SA" | "EU" | "AF" | "AS" | "OC";
 
