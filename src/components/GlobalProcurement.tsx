@@ -2,7 +2,7 @@ import { ExternalLink, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import WorldMap from "react-world-map";
 
-type ContinentCode = "NA" | "SA" | "EU" | "AF" | "AS" | "OC";
+export type ContinentCode = "NA" | "SA" | "EU" | "AF" | "AS" | "OC";
 
 type CountriesInRegionData = Record<ContinentCode, CountryData[]>;
 
@@ -419,7 +419,7 @@ const GlobalProcurement = () => {
           <div className={`${isPanelOpen ? "max-w-[700px]" : "w-full"}`}>
             <div className="bg-gray p-6 flex items-center justify-center world-map">
               <WorldMap
-                selected={selectedContinent}
+                selected={selectedContinent as string}
                 onSelect={selectContinent}
               />
             </div>
