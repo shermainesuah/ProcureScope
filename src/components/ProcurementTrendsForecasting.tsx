@@ -30,8 +30,8 @@ const ProcurementTrendsForecasting: React.FC = () => {
             key={index}
             value={`trend-${index}`}
           >
-            <AccordionTrigger className="text-md font-semibold text-textColor-primary">
-              {panel.title}
+            <AccordionTrigger>
+              <h3>{panel.title}</h3>
             </AccordionTrigger>
             <AccordionContent>
               {index === 0 ? (

@@ -16,6 +16,9 @@
   h2 {
     @apply text-lg font-semibold text-primary;
   }
+  h3 {
+    @apply text-base font-semibold text-primary;
+  }
 }
 
 @layer components {

@@ -486,9 +486,7 @@ const GlobalProcurement = () => {
                   className="h-5 w-5 hover:cursor-pointer hover:text-error text-primary "
                 />
               </div>
-              <p className="font-semibold text-md text-primary mt-2">
-                {continentProcurementData[selectedContinent].name}
-              </p>
+              <h3>{continentProcurementData[selectedContinent].name}</h3>
               <ul className="list-disc list-inside text-xs font-semibold text-primary space-y-1 mt-4">
                 <li>
                   Total Procurement Volume:
@@ -577,9 +575,7 @@ const GlobalProcurement = () => {
                   key={country.country}
                   className="border rounded-lg p-4 mt-6"
                 >
-                  <p className="font-semibold text-md text-primary">
-                    {country.country}
-                  </p>
+                  <h3>{country.country}</h3>
                   <ul className="list-none list-inside text-xs text-primary space-y-1 mt-2">
                     <li>
                       Procurement Volume: {country.procurementVolume} units
