@@ -10,6 +10,7 @@ function App() {
     <div className="min-h-screen bg-gray flex flex-col">
       <Navbar />
       <Routes>
+        <Route path="/ProcureScope" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/data-import" element={<DataImport />} />
