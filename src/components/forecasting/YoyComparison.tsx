@@ -135,7 +135,7 @@ const YoyComparison = () => {
     };
   };
 
-  const option = useMemo(
+  const chartOptions = useMemo(
     () => ({
       tooltip: {
         trigger: "axis",
@@ -274,7 +274,11 @@ const YoyComparison = () => {
           dropdownWidth="180px"
         />
       </div>
-      <ReactECharts className="mt-6" option={option} style={{ height: 400 }} />
+      <ReactECharts
+        className="mt-6"
+        option={chartOptions}
+        style={{ height: 400 }}
+      />
       <div className="relative">
         <div
           className={`group flex items-center bg-gray border-gray rounded-lg gap-2 p-3 hover:cursor-pointer relative z-10 ${
