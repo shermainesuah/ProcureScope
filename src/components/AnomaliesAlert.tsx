@@ -118,7 +118,7 @@ const AnomaliesAlert = () => {
           <div className="flex gap-3 items-center">
             <SortPanel options={sortOptions} onSelect={updateSortOptions} />
             <FilterPanel types={filterOptions} onSelect={updateFilterOptions} />
-            <EllipsisVertical className="w-5 h-5 text-primary hover:text-secondary hover:cursor-pointer" />
+            <EllipsisVertical className="w-5 h-5 text-primary hover:text-tertiary hover:cursor-pointer" />
           </div>
         </div>
       </div>
@@ -136,19 +136,17 @@ const AnomaliesAlert = () => {
                 <div className="flex flex-col items-start">
                   <p className="text-sm font-semibold text-primary">
                     {anomaly.type}
-                    <span className="ml-1 text-textColor-secondary">
+                    <span className="ml-1 text-tertiary">
                       ({anomaly.supplier})
                     </span>
                   </p>
-                  <p className="text-xs text-textColor-secondary mt-1">
+                  <p className="text-xs text-tertiary mt-1">
                     {anomaly.orderSummary}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <p className="text-xs text-textColor-secondary">
-                  {anomaly.detectedAt}
-                </p>
+                <p className="text-xs text-tertiary">{anomaly.detectedAt}</p>
                 <CircleAlert
                   className={`h-5 w-5 ${severityColors[anomaly.severity]}`}
                 />
