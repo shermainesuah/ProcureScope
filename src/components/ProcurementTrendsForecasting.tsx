@@ -4,9 +4,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@radix-ui/react-accordion";
-import TrendsOverTime from "./forecasting/TrendsOverTime";
-import YoyComparison from "./forecasting/YoyComparison";
-import ForecastingInsights from "./forecasting/ForecastingInsights";
+import TrendsOverTime from "./TrendsAndForecasting/TrendsOverTime";
+import YoyComparison from "./TrendsAndForecasting/YoyComparison";
+import ForecastingInsights from "./TrendsAndForecasting/ForecastingInsights";
 
 const ProcurementTrendsForecasting: React.FC = () => {
   const trendsForecastingPanels = [
