@@ -4,6 +4,7 @@ import Dropdown from "../Dropdown";
 import type { Option } from "../../types";
 import { getISOWeek, getQuarter } from "date-fns";
 import { CallbackDataParams } from "echarts/types/dist/shared";
+import { getYAxisLabel } from "../../utils";
 
 const yAxisMetricOptions: Option[] = [
   { label: "Total Spend", value: "totalSpend" },
@@ -112,12 +113,7 @@ const TrendsOverTime = () => {
       xAxis: { type: "category", data: processedData.map((d) => d.key) },
       yAxis: {
         type: "value",
-        name: (() => {
-          if (selectedYAxis.value === "totalSpend") return "Total Spend ($)";
-          if (selectedYAxis.value === "avgOrderValue")
-            return "Avg Order Value ($)";
-          return "Order Count (Units)";
-        })(),
+        name: getYAxisLabel(selectedYAxis.value),
       },
       series: [
         {
