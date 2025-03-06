@@ -98,7 +98,7 @@ const SortPanel = ({ options, onSelect }: SortDropdownProps) => {
 
       <button
         onClick={() => setSortPanelOpen(!sortPanelOpen)}
-        className={`group w-fit text-sm flex items-center p-2 hover:text-secondary transition ${
+        className={`group w-fit text-sm flex items-center hover:text-secondary transition ${
           sortPanelOpen ? "text-secondary" : "text-primary"
         }`}
       >
