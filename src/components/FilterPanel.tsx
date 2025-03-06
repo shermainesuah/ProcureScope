@@ -247,29 +247,47 @@ const FilterPanel = ({ types, onSelect }: FilterProps) => {
   };
 
   const handleApplyFilter = () => {
-    const filters = Object.keys(selectedConditions).map((type) => {
-      const filterKey = type as FilterKey;
-      const filterConfigItem = filterConfig[type as keyof typeof filterConfig];
+    const filters = Object.keys(inputValues).map((key) => {
+      const filterKey = key as FilterKey;
+      const filterConfigItem =
+        filterConfig[filterKey as keyof typeof filterConfig];
+      const condition = selectedConditions[filterKey];
 
-      if (selectedConditions[filterKey]?.value === "in between") {
+      // Handle conditions for severity and risk level filters
+      if (filterKey === "severity" || filterKey === "riskLevel") {
         return {
           label: filterConfigItem.label,
-          type,
-          condition: selectedConditions[filterKey] as Option,
+          type: filterKey,
+          condition: {
+            label: "Is",
+            value: "is",
+          },
+          value: inputValues[filterKey] || "",
+        };
+      }
+
+      // Handle "in between" condition for date range filters
+      if (condition?.value === "in between") {
+        return {
+          label: filterConfigItem.label,
+          type: filterKey,
+          condition,
           value: {
             start: inputValues["date-start" as FilterKey] || "",
             end: inputValues["date-end" as FilterKey] || "",
           },
         };
       }
+      const conditions = condition as Option;
 
       return {
         label: filterConfigItem.label,
-        type,
-        condition: selectedConditions[filterKey] as Option,
+        type: filterKey,
+        condition: conditions,
         value: inputValues[filterKey] || "",
       };
     });
+
     setAppliedFilters(filters.map((prev) => ({ ...prev, filters })));
     setselectedConditions({});
     setInputValues({});
