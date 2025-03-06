@@ -373,68 +373,6 @@ const GlobalProcurement = () => {
     useState<ContinentCode | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  const generateContinentData = (selected: ContinentCode) => {
-    const regionData = continentProcurementData[selected];
-
-    return (
-      <ul className="list-disc list-inside text-xs font-semibold text-primary space-y-1 mt-4">
-        <li>
-          Total Procurement Volume:
-          <span className="font-normal ml-1">{regionData.volume} units</span>
-        </li>
-        <li>
-          Market Share:
-          <span className="font-normal ml-1">{regionData.marketShare}</span>
-        </li>
-        <li>
-          Growth Rate:
-          <span className="font-normal ml-1">{regionData.growthRate}</span>
-        </li>
-        <li>
-          Top Products:
-          <ul className="list-disc list-inside ml-4 font-normal">
-            {regionData.topProducts.map((product) => (
-              <li key={product.name}>
-                {product.name}: {product.percentage}
-              </li>
-            ))}
-          </ul>
-        </li>
-        <li>
-          Top Suppliers:
-          <ul className="list-disc list-inside ml-4 font-normal">
-            {regionData.topSuppliers.map((supplier) => (
-              <li key={supplier.name}>
-                {supplier.name} ({supplier.country}) - {supplier.share} share
-              </li>
-            ))}
-          </ul>
-        </li>
-        <li>
-          Avg Cost Per Unit:
-          <span className="font-normal ml-1">{regionData.avgCostPerUnit}</span>
-        </li>
-        <li>
-          Total Cost:
-          <span className="font-normal ml-1">{regionData.totalCost}</span>
-        </li>
-        <li>
-          Logistics:
-          <ul className="list-disc list-inside ml-4 font-normal">
-            <li>Major Hubs: {regionData.logistics.majorHubs.join(", ")}</li>
-            <li>Avg Lead Time: {regionData.logistics.avgLeadTime}</li>
-          </ul>
-        </li>
-        <li>
-          Risks:
-          <span className="font-normal ml-1">
-            {regionData.risks.join(", ")}
-          </span>
-        </li>
-      </ul>
-    );
-  };
-
   const getMapColorByVolume = (volume: number) => {
     switch (true) {
       case volume > 8000:
@@ -551,9 +489,88 @@ const GlobalProcurement = () => {
               <p className="font-semibold text-md text-primary mt-2">
                 {continentProcurementData[selectedContinent].name}
               </p>
-
-              <ul className="list-disc list-inside text-xs text-primary">
-                {generateContinentData(selectedContinent)}
+              <ul className="list-disc list-inside text-xs font-semibold text-primary space-y-1 mt-4">
+                <li>
+                  Total Procurement Volume:
+                  <span className="font-normal ml-1">
+                    {continentProcurementData[selectedContinent].volume} units
+                  </span>
+                </li>
+                <li>
+                  Market Share:
+                  <span className="font-normal ml-1">
+                    {continentProcurementData[selectedContinent].marketShare}
+                  </span>
+                </li>
+                <li>
+                  Growth Rate:
+                  <span className="font-normal ml-1">
+                    {continentProcurementData[selectedContinent].growthRate}
+                  </span>
+                </li>
+                <li>
+                  Top Products:
+                  <ul className="list-disc list-inside ml-4 font-normal">
+                    {continentProcurementData[
+                      selectedContinent
+                    ].topProducts.map((product) => (
+                      <li key={product.name}>
+                        {product.name}: {product.percentage}
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+                <li>
+                  Top Suppliers:
+                  <ul className="list-disc list-inside ml-4 font-normal">
+                    {continentProcurementData[
+                      selectedContinent
+                    ].topSuppliers.map((supplier) => (
+                      <li key={supplier.name}>
+                        {supplier.name} ({supplier.country}) - {supplier.share}{" "}
+                        share
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+                <li>
+                  Avg Cost Per Unit:
+                  <span className="font-normal ml-1">
+                    {continentProcurementData[selectedContinent].avgCostPerUnit}
+                  </span>
+                </li>
+                <li>
+                  Total Cost:
+                  <span className="font-normal ml-1">
+                    {continentProcurementData[selectedContinent].totalCost}
+                  </span>
+                </li>
+                <li>
+                  Logistics:
+                  <ul className="list-disc list-inside ml-4 font-normal">
+                    <li>
+                      Major Hubs:{" "}
+                      {continentProcurementData[
+                        selectedContinent
+                      ].logistics.majorHubs.join(", ")}
+                    </li>
+                    <li>
+                      Avg Lead Time:{" "}
+                      {
+                        continentProcurementData[selectedContinent].logistics
+                          .avgLeadTime
+                      }
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  Risks:
+                  <span className="font-normal ml-1">
+                    {continentProcurementData[selectedContinent].risks.join(
+                      ", "
+                    )}
+                  </span>
+                </li>
               </ul>
               {countryProcurementData[selectedContinent].map((country) => (
                 <div
